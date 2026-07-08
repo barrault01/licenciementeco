@@ -1,0 +1,512 @@
+<style>
+  :root {
+    color-scheme: light dark;
+    --paper:      #F4F3EE;
+    --band:       #ECEAE2;
+    --surface:    #FBFAF6;
+    --ink:        #1B2A4A;
+    --ink-soft:   #47506A;
+    --muted:      #6D7488;
+    --line:       #DAD7CC;
+    --line-soft:  #E5E2D8;
+    --teal:       #0E7C6B;
+    --teal-tint:  #E3F0EC;
+    --amber:      #C77D28;
+    --amber-tint: #F6EBD9;
+    --red:        #B23B3B;
+    --red-tint:   #F4E4E1;
+    --shadow:     0 1px 2px rgba(27,42,74,.05), 0 8px 28px rgba(27,42,74,.07);
+
+    --serif: Georgia, "Iowan Old Style", "Palatino Linotype", "Times New Roman", serif;
+    --sans:  system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --mono:  ui-monospace, "SF Mono", "Cascadia Mono", "Roboto Mono", Menlo, Consolas, monospace;
+
+    --measure: 42rem;
+    --wide: 60rem;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper:      #0F141D;
+      --band:       #141B26;
+      --surface:    #182231;
+      --ink:        #ECEEF3;
+      --ink-soft:   #B9C0CE;
+      --muted:      #8A93A6;
+      --line:       #29323F;
+      --line-soft:  #222A36;
+      --teal:       #45B8A2;
+      --teal-tint:  #12241F;
+      --amber:      #E0A24A;
+      --amber-tint: #2A2114;
+      --red:        #E07B72;
+      --red-tint:   #2A1817;
+      --shadow:     0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="light"] {
+    color-scheme: light;
+    --paper:#F4F3EE; --band:#ECEAE2; --surface:#FBFAF6;
+    --ink:#1B2A4A; --ink-soft:#47506A; --muted:#6D7488;
+    --line:#DAD7CC; --line-soft:#E5E2D8;
+    --teal:#0E7C6B; --teal-tint:#E3F0EC;
+    --amber:#C77D28; --amber-tint:#F6EBD9;
+    --red:#B23B3B; --red-tint:#F4E4E1;
+    --shadow:0 1px 2px rgba(27,42,74,.05), 0 8px 28px rgba(27,42,74,.07);
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --paper:#0F141D; --band:#141B26; --surface:#182231;
+    --ink:#ECEEF3; --ink-soft:#B9C0CE; --muted:#8A93A6;
+    --line:#29323F; --line-soft:#222A36;
+    --teal:#45B8A2; --teal-tint:#12241F;
+    --amber:#E0A24A; --amber-tint:#2A2114;
+    --red:#E07B72; --red-tint:#2A1817;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 17px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  ::selection { background: var(--teal); color: #fff; }
+
+  .wrap { max-width: var(--measure); margin-inline: auto; padding-inline: 1.4rem; }
+  .wrap-wide { max-width: var(--wide); margin-inline: auto; padding-inline: 1.4rem; }
+
+  section { padding-block: clamp(2.4rem, 6vw, 4rem); }
+  .band { background: var(--band); border-block: 1px solid var(--line-soft); }
+
+  h1, h2, h3 { font-family: var(--serif); font-weight: 600; line-height: 1.15; text-wrap: balance; color: var(--ink); }
+  h2 { font-size: clamp(1.5rem, 3.6vw, 2.1rem); margin: 0 0 .4rem; letter-spacing: -.01em; }
+  h3 { font-size: 1.18rem; margin: 0 0 .35rem; }
+  p { margin: 0 0 1rem; color: var(--ink-soft); }
+  a { color: var(--teal); text-underline-offset: 3px; text-decoration-thickness: 1px; }
+  a:focus-visible, .tile:focus-visible { outline: 2px solid var(--teal); outline-offset: 3px; border-radius: 3px; }
+  strong { color: var(--ink); font-weight: 650; }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: .74rem;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin: 0 0 1rem;
+    display: flex; align-items: center; gap: .6rem;
+  }
+  .eyebrow::before { content: ""; width: 1.6rem; height: 1px; background: var(--teal); }
+  .lede-eyebrow { justify-content: flex-start; }
+  h2 + .sub { color: var(--muted); font-size: 1.02rem; margin-top: -.1rem; margin-bottom: 1.6rem; }
+
+  /* ---------- HERO ---------- */
+  header.hero {
+    padding-block: clamp(3rem, 9vw, 6rem) clamp(2rem, 5vw, 3rem);
+    background:
+      radial-gradient(120% 80% at 88% -10%, var(--teal-tint) 0%, transparent 55%),
+      var(--paper);
+  }
+  .hero h1 {
+    font-size: clamp(2.1rem, 6.2vw, 3.5rem);
+    letter-spacing: -.02em;
+    margin: 0 0 1.1rem;
+  }
+  .hero .kicker {
+    font-family: var(--serif); font-style: italic; color: var(--teal); font-weight: 400;
+  }
+  .hero p.intro { font-size: 1.16rem; color: var(--ink-soft); max-width: 36rem; }
+  .stamp {
+    display: inline-flex; align-items: center; gap: .5rem;
+    margin-top: 1.7rem; padding: .5rem .85rem;
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: 999px; font-size: .82rem; color: var(--muted);
+    box-shadow: var(--shadow);
+  }
+  .stamp .dot { width: .5rem; height: .5rem; border-radius: 50%; background: var(--teal); flex: none; }
+
+  /* ---------- NUMBER TILES ---------- */
+  .tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-top: 1.8rem; }
+  .tile {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: 14px; padding: 1.3rem 1.1rem; box-shadow: var(--shadow);
+  }
+  .tile .num {
+    font-family: var(--serif); font-weight: 600;
+    font-size: clamp(1.7rem, 4vw, 2.2rem); color: var(--teal);
+    font-variant-numeric: tabular-nums; line-height: 1;
+  }
+  .tile .num small { font-size: .95rem; color: var(--ink-soft); font-family: var(--sans); font-weight: 500; }
+  .tile .lbl { font-size: .84rem; color: var(--muted); margin-top: .5rem; }
+
+  /* ---------- DEFINITION / CALLOUTS ---------- */
+  .callout {
+    border-left: 3px solid var(--teal);
+    background: var(--teal-tint);
+    padding: 1.05rem 1.2rem; border-radius: 0 12px 12px 0;
+    margin: 1.4rem 0;
+  }
+  .callout.warn { border-color: var(--amber); background: var(--amber-tint); }
+  .callout p:last-child { margin-bottom: 0; }
+  .callout .tag {
+    font-family: var(--mono); font-size: .7rem; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--teal); display: block; margin-bottom: .3rem;
+  }
+  .callout.warn .tag { color: var(--amber); }
+
+  ul.clean { list-style: none; padding: 0; margin: 1rem 0; display: grid; gap: .7rem; }
+  ul.clean li { position: relative; padding-left: 1.6rem; color: var(--ink-soft); }
+  ul.clean li::before {
+    content: ""; position: absolute; left: 0; top: .62em;
+    width: .5rem; height: .5rem; border-radius: 2px; background: var(--teal); transform: rotate(45deg);
+  }
+
+  /* ---------- TIMELINE ---------- */
+  .timeline { display: grid; gap: 0; margin-top: 1.6rem; }
+  .step {
+    display: grid; grid-template-columns: 2.6rem 1fr; gap: 1.1rem;
+    position: relative; padding-bottom: 1.8rem;
+  }
+  .step:not(:last-child)::before {
+    content: ""; position: absolute; left: 1.3rem; top: 2.6rem; bottom: -.2rem;
+    width: 2px; background: var(--line); transform: translateX(-1px);
+  }
+  .step .marker {
+    width: 2.6rem; height: 2.6rem; border-radius: 50%;
+    background: var(--surface); border: 2px solid var(--teal); color: var(--teal);
+    display: grid; place-items: center; font-family: var(--serif); font-weight: 600; font-size: 1.05rem;
+    z-index: 1; box-shadow: var(--shadow);
+  }
+  .step .body h3 { margin-top: .25rem; }
+  .step .body p { margin-bottom: .4rem; }
+
+  /* ---------- COMPARE ---------- */
+  .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; margin-top: 1.6rem; }
+  .card {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 16px;
+    padding: 1.5rem 1.4rem; box-shadow: var(--shadow);
+  }
+  .card.accept { border-top: 4px solid var(--teal); }
+  .card.refuse { border-top: 4px solid var(--red); }
+  .card h3 { display: flex; align-items: baseline; gap: .5rem; }
+  .card h3 .badge {
+    font-family: var(--mono); font-size: .68rem; letter-spacing: .1em; text-transform: uppercase;
+    padding: .2rem .5rem; border-radius: 6px;
+  }
+  .accept h3 .badge { background: var(--teal-tint); color: var(--teal); }
+  .refuse h3 .badge { background: var(--red-tint); color: var(--red); }
+  .card ul { list-style: none; padding: 0; margin: 1rem 0 0; display: grid; gap: .8rem; }
+  .card li { position: relative; padding-left: 1.5rem; font-size: .96rem; color: var(--ink-soft); }
+  .card li::before { position: absolute; left: 0; top: 0; font-weight: 700; }
+  .accept li::before { content: "＋"; color: var(--teal); }
+  .refuse li::before { content: "－"; color: var(--red); }
+
+  /* ---------- BENEFIT CARDS ---------- */
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; margin-top: 1.6rem; }
+  .bcard {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 16px;
+    padding: 1.4rem; box-shadow: var(--shadow);
+  }
+  .bcard .icon {
+    font-family: var(--mono); font-weight: 600; font-size: .8rem; color: var(--teal);
+    background: var(--teal-tint); border-radius: 8px; padding: .35rem .55rem; display: inline-block; margin-bottom: .7rem;
+    letter-spacing: .05em;
+  }
+  .bcard p { font-size: .96rem; margin-bottom: 0; }
+
+  /* ---------- FAQ ---------- */
+  details {
+    border: 1px solid var(--line); border-radius: 12px; background: var(--surface);
+    padding: 0 1.2rem; margin-bottom: .8rem; box-shadow: var(--shadow);
+  }
+  details[open] { border-color: var(--teal); }
+  summary {
+    cursor: pointer; list-style: none; padding: 1.05rem 2rem 1.05rem 0;
+    font-family: var(--serif); font-size: 1.08rem; font-weight: 600; color: var(--ink);
+    position: relative;
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary::after {
+    content: "+"; position: absolute; right: 0; top: 50%; transform: translateY(-50%);
+    font-family: var(--sans); font-weight: 400; font-size: 1.5rem; color: var(--teal); transition: transform .2s ease;
+  }
+  details[open] summary::after { content: "\2013"; }
+  details .answer { padding-bottom: 1.1rem; }
+  details .answer p:last-child { margin-bottom: 0; }
+
+  /* ---------- SOURCES / FOOTER ---------- */
+  .sources { display: grid; grid-template-columns: repeat(2, 1fr); gap: .7rem; margin-top: 1.4rem; }
+  .sources a {
+    display: block; padding: .9rem 1.1rem; background: var(--surface);
+    border: 1px solid var(--line); border-radius: 12px; text-decoration: none; box-shadow: var(--shadow);
+  }
+  .sources a span.t { display: block; color: var(--ink); font-weight: 600; }
+  .sources a span.u { display: block; color: var(--muted); font-size: .8rem; font-family: var(--mono); margin-top: .15rem; }
+  .sources a:hover { border-color: var(--teal); }
+
+  footer.disc { padding-block: 2.6rem; border-top: 1px solid var(--line); }
+  footer.disc p { font-size: .84rem; color: var(--muted); margin-bottom: .6rem; }
+  footer.disc .wordmark { font-family: var(--serif); font-weight: 600; color: var(--ink); font-size: 1rem; }
+
+  @media (max-width: 720px) {
+    .tiles { grid-template-columns: repeat(2, 1fr); }
+    .compare, .grid2, .sources { grid-template-columns: 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow lede-eyebrow">Guide pratique · Droit du travail français</p>
+    <h1>Licenciement économique&nbsp;: <span class="kicker">comprendre le CSP</span> et vos droits</h1>
+    <p class="intro">Vous êtes concerné par un licenciement pour motif économique&nbsp;? Ce guide vous explique, simplement, ce qu'est le <strong>Contrat de sécurisation professionnelle (CSP)</strong>, ce qu'il change pour vous, et comment décider en connaissance de cause.</p>
+    <span class="stamp"><span class="dot"></span>À jour en juillet 2026 · Convention CSP prolongée jusqu'au 31 décembre 2026</span>
+  </div>
+</header>
+
+<section class="band">
+  <div class="wrap">
+    <p class="eyebrow">L'essentiel en 30 secondes</p>
+    <h2>Ce qu'il faut retenir</h2>
+    <p class="sub">Le CSP est un dispositif d'accompagnement renforcé, proposé lors d'un licenciement économique dans les entreprises de <strong>moins de 1&nbsp;000 salariés</strong> (ou en redressement / liquidation judiciaire, quelle que soit la taille).</p>
+    <div class="tiles">
+      <div class="tile">
+        <div class="num">21 <small>jours</small></div>
+        <div class="lbl">de réflexion pour accepter ou refuser</div>
+      </div>
+      <div class="tile">
+        <div class="num">12 <small>mois</small></div>
+        <div class="lbl">de durée maximale du dispositif</div>
+      </div>
+      <div class="tile">
+        <div class="num">75<small>%</small></div>
+        <div class="lbl">du salaire brut de référence (allocation ASP)</div>
+      </div>
+      <div class="tile">
+        <div class="num">50<small>%</small></div>
+        <div class="lbl">de vos droits restants en prime au reclassement</div>
+      </div>
+    </div>
+    <div class="callout" style="margin-top:1.8rem">
+      <span class="tag">En un mot</span>
+      <p>Accepter le CSP, c'est échanger votre préavis contre <strong>un an d'accompagnement renforcé</strong> vers l'emploi, avec une allocation plus élevée et versée <strong>sans délai d'attente</strong>. Vous conservez par ailleurs votre indemnité de licenciement.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="eyebrow">Le point de départ</p>
+    <h2>Qu'est-ce qu'un licenciement économique&nbsp;?</h2>
+    <p>C'est un licenciement <strong>qui n'est pas lié à votre personne</strong> — ni à votre comportement, ni à vos performances. Il découle d'un motif économique touchant l'entreprise (article L1233-3 du Code du travail)&nbsp;:</p>
+    <ul class="clean">
+      <li>des <strong>difficultés économiques</strong> (baisse des commandes ou du chiffre d'affaires, pertes d'exploitation…)&nbsp;;</li>
+      <li>des <strong>mutations technologiques</strong>&nbsp;;</li>
+      <li>une <strong>réorganisation</strong> nécessaire à la sauvegarde de la compétitivité&nbsp;;</li>
+      <li>la <strong>cessation d'activité</strong> de l'entreprise.</li>
+    </ul>
+    <p>Concrètement, il en résulte la <strong>suppression ou la transformation de votre poste</strong>, ou une modification d'un élément essentiel de votre contrat que vous refusez.</p>
+    <div class="callout">
+      <span class="tag">Vos protections</span>
+      <p>Avant tout licenciement, l'employeur doit chercher à vous <strong>reclasser</strong>. S'il licencie plusieurs personnes, il applique un <strong>ordre des licenciements</strong> selon des critères (charges de famille, ancienneté, situation rendant le retour à l'emploi difficile — âge, handicap —, qualités professionnelles). Enfin, vous bénéficiez d'une <strong>priorité de réembauche pendant 1 an</strong> si un poste se libère.</p>
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap">
+    <p class="eyebrow">Le dispositif</p>
+    <h2>Le CSP, comment ça se passe&nbsp;?</h2>
+    <p class="sub">Le Contrat de sécurisation professionnelle est piloté par France&nbsp;Travail. Son but&nbsp;: vous ramener vers l'emploi le plus vite possible, tout en maintenant un revenu. Voici le déroulé, étape par étape.</p>
+    <div class="timeline">
+      <div class="step">
+        <div class="marker">1</div>
+        <div class="body">
+          <h3>L'employeur vous informe</h3>
+          <p>Il vous remet le <strong>dossier CSP</strong> (lors de l'entretien préalable, ou à l'issue de la consultation du CSE). À partir de là, le compte à rebours démarre.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="marker">2</div>
+        <div class="body">
+          <h3>Vous avez 21 jours pour décider</h3>
+          <p>Ce sont <strong>21 jours calendaires</strong> (week-ends et jours fériés compris). Un entretien d'information avec France&nbsp;Travail peut vous aider à choisir. Sans réponse au terme du délai, c'est considéré comme un refus.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="marker">3</div>
+        <div class="body">
+          <h3>Votre décision</h3>
+          <p><strong>Si vous acceptez&nbsp;:</strong> le contrat prend fin à l'issue des 21 jours (rupture d'un commun accord, <strong>sans préavis à exécuter</strong>). Le CSP démarre le lendemain.</p>
+          <p><strong>Si vous refusez&nbsp;:</strong> c'est un licenciement économique classique — vous effectuez (ou êtes dispensé de) votre préavis, puis relevez de l'ARE.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="marker">4</div>
+        <div class="body">
+          <h3>L'accompagnement se met en place</h3>
+          <p>Un <strong>entretien de pré-bilan</strong> a lieu dans les 8 jours. Vous avez ensuite un <strong>conseiller référent dédié</strong> et un <strong>plan de sécurisation professionnelle (PSP)</strong>&nbsp;: bilan de compétences, formations, ateliers, aide à la recherche d'emploi.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="marker">5</div>
+        <div class="body">
+          <h3>12 mois de sécurisation</h3>
+          <p>Pendant un an, vous percevez l'allocation (ASP) et bénéficiez du suivi. Vous pouvez <strong>travailler ponctuellement</strong> (missions de 3 jours à 6 mois) sans perdre le dispositif.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="eyebrow">La décision</p>
+    <h2>Accepter ou refuser&nbsp;? Le comparatif</h2>
+    <p class="sub">C'est <strong>votre choix</strong>. Voici ce que change chaque option pour un salarié ayant au moins 1&nbsp;an d'ancienneté.</p>
+    <div class="compare">
+      <div class="card accept">
+        <h3>Accepter le CSP <span class="badge">Recommandé le plus souvent</span></h3>
+        <ul>
+          <li>Allocation <strong>ASP = 75&nbsp;% du salaire journalier brut de référence</strong> (souvent proche de votre ancien salaire net).</li>
+          <li>Versée <strong>sans délai d'attente ni différé</strong> d'indemnités.</li>
+          <li><strong>Accompagnement renforcé</strong> et personnalisé pendant 12 mois.</li>
+          <li>Accès aux <strong>primes au reclassement</strong> et à l'indemnité différentielle.</li>
+          <li>Vous <strong>conservez votre indemnité de licenciement</strong>.</li>
+        </ul>
+      </div>
+      <div class="card refuse">
+        <h3>Refuser le CSP <span class="badge">Licenciement classique</span></h3>
+        <ul>
+          <li>Vous effectuez votre <strong>préavis</strong> (ou touchez l'indemnité compensatrice).</li>
+          <li>Vous percevez l'<strong>ARE</strong> (allocation chômage), en général <strong>un peu inférieure</strong> à l'ASP.</li>
+          <li>L'ARE peut être versée après un <strong>différé et un délai d'attente</strong>.</li>
+          <li>Accompagnement de <strong>droit commun</strong>, non renforcé.</li>
+          <li>Vous <strong>conservez aussi votre indemnité de licenciement</strong>.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="callout warn">
+      <span class="tag">Cas particulier · moins d'1 an d'ancienneté</span>
+      <p>Si vous avez <strong>moins d'un an d'ancienneté</strong>, l'ASP est égale au montant de l'ARE (et non 75&nbsp;%), mais vous <strong>conservez l'intégralité de votre indemnité compensatrice de préavis</strong>. L'accompagnement renforcé, lui, reste identique.</p>
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap">
+    <p class="eyebrow">Le revenu</p>
+    <h2>Combien vais-je toucher&nbsp;?</h2>
+    <p class="sub">L'<strong>Allocation de sécurisation professionnelle (ASP)</strong> est versée par France&nbsp;Travail pendant 12 mois maximum.</p>
+    <ul class="clean">
+      <li><strong>Au moins 1 an d'ancienneté&nbsp;:</strong> ASP = <strong>75&nbsp;% du salaire journalier de référence brut</strong>, avec un plancher au niveau de l'ARE. Aucun délai d'attente, aucun différé.</li>
+      <li><strong>Moins d'1 an d'ancienneté&nbsp;:</strong> ASP = montant équivalent à l'ARE, et vous gardez votre indemnité compensatrice de préavis.</li>
+      <li>L'allocation est <strong>suspendue</strong> pendant vos périodes de travail, puis reprend ensuite.</li>
+    </ul>
+    <div class="callout">
+      <span class="tag">Et le préavis&nbsp;?</span>
+      <p>En acceptant le CSP, vous ne réalisez pas votre préavis. L'employeur verse à France&nbsp;Travail <strong>l'équivalent de votre indemnité de préavis, dans la limite de 3 mois</strong>, pour financer le dispositif. <strong>Si votre préavis dépasse 3 mois, le surplus vous est versé directement.</strong></p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="eyebrow">Les coups de pouce</p>
+    <h2>Ce qui aide au retour à l'emploi</h2>
+    <p class="sub">Le CSP ne se limite pas à une allocation. Plusieurs primes récompensent une reprise rapide d'activité.</p>
+    <div class="grid2">
+      <div class="bcard">
+        <span class="icon">PRIME AU RECLASSEMENT</span>
+        <h3>Reprendre vite&nbsp;= être récompensé</h3>
+        <p>Si vous retrouvez un emploi durable (CDI, CDD ou intérim d'au moins 6 mois) <strong>avant la fin du 10ᵉ mois</strong>, vous touchez une prime égale à <strong>50&nbsp;% de vos droits ASP restants</strong>, versée en deux fois. Réservée aux salariés ayant ≥&nbsp;1 an d'ancienneté.</p>
+      </div>
+      <div class="bcard">
+        <span class="icon">INDEMNITÉ DIFFÉRENTIELLE (IDR)</span>
+        <h3>Accepter un poste moins payé sans tout perdre</h3>
+        <p>Si le nouvel emploi est <strong>moins bien rémunéré</strong> qu'avant, l'IDR compense la différence — (SJR&nbsp;×&nbsp;30) moins le salaire brut mensuel — pendant 12 mois maximum, dans la limite de 50&nbsp;% de vos droits ASP restants.</p>
+      </div>
+      <div class="bcard">
+        <span class="icon">PÉRIODES D'ACTIVITÉ</span>
+        <h3>Travailler pendant le CSP</h3>
+        <p>Vous pouvez enchaîner des missions de <strong>3 jours à 6 mois</strong>, avec l'accord de votre conseiller. Si l'activité commence après le 7ᵉ mois, le CSP est <strong>prolongé d'autant</strong> (jusqu'à 3 mois de plus).</p>
+      </div>
+      <div class="bcard">
+        <span class="icon">FORMATION</span>
+        <h3>Se reconvertir ou monter en compétences</h3>
+        <p>Des <strong>formations financées</strong> peuvent être intégrées à votre plan de sécurisation professionnelle — l'occasion de préparer une reconversion ou de renforcer votre profil.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap">
+    <p class="eyebrow">Questions fréquentes</p>
+    <h2>Idées reçues &amp; réponses</h2>
+    <div style="margin-top:1.4rem">
+      <details>
+        <summary>Suis-je obligé d'accepter le CSP&nbsp;?</summary>
+        <div class="answer"><p>Non, c'est un choix libre. Mais pesez bien l'écart&nbsp;: allocation plus élevée versée sans délai, et accompagnement renforcé. Pour la plupart des salariés, le CSP est plus avantageux qu'un licenciement classique.</p></div>
+      </details>
+      <details>
+        <summary>Est-ce que je perds mon indemnité de licenciement&nbsp;?</summary>
+        <div class="answer"><p>Non. Vous conservez votre indemnité de licenciement, que vous acceptiez ou non le CSP (sous réserve des conditions d'ancienneté habituelles).</p></div>
+      </details>
+      <details>
+        <summary>Vais-je faire mon préavis si j'accepte&nbsp;?</summary>
+        <div class="answer"><p>Non. Le contrat se termine à la fin des 21 jours de réflexion. L'indemnité de préavis (jusqu'à 3 mois) sert à financer le CSP&nbsp;; si votre préavis dépasse 3 mois, le surplus vous est versé.</p></div>
+      </details>
+      <details>
+        <summary>Que se passe-t-il au bout des 12 mois si je n'ai pas retrouvé d'emploi&nbsp;?</summary>
+        <div class="answer"><p>Vous basculez vers l'ARE pour la durée de droits qu'il vous reste. Le temps passé en CSP est décompté de vos droits au chômage.</p></div>
+      </details>
+      <details>
+        <summary>Le CSP existe-t-il toujours en 2026&nbsp;?</summary>
+        <div class="answer"><p>Oui. La convention a été prolongée par les partenaires sociaux <strong>jusqu'au 31 décembre 2026</strong> (France métropolitaine et Mayotte).</p></div>
+      </details>
+      <details>
+        <summary>Mon entreprise a plus de 1&nbsp;000 salariés — ai-je droit au CSP&nbsp;?</summary>
+        <div class="answer"><p>Dans ce cas, l'employeur n'est pas tenu de proposer le CSP&nbsp;: il doit à la place vous proposer un <strong>congé de reclassement</strong>. Le CSP redevient toutefois obligatoire si l'entreprise est en redressement ou liquidation judiciaire.</p></div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="eyebrow">Aller plus loin</p>
+    <h2>Sources officielles</h2>
+    <p class="sub">Ce guide s'appuie sur les sources publiques ci-dessous. En cas de doute sur votre situation, rapprochez-vous de votre conseiller France&nbsp;Travail ou d'un avocat en droit du travail.</p>
+    <div class="sources">
+      <a href="https://www.service-public.gouv.fr/particuliers/vosdroits/F13819" target="_blank" rel="noopener">
+        <span class="t">Contrat de sécurisation professionnelle (CSP)</span>
+        <span class="u">service-public.gouv.fr</span>
+      </a>
+      <a href="https://travail-emploi.gouv.fr/le-contrat-de-securisation-professionnelle-csp" target="_blank" rel="noopener">
+        <span class="t">Le CSP — Ministère du Travail</span>
+        <span class="u">travail-emploi.gouv.fr</span>
+      </a>
+      <a href="https://www.unedic.org/la-reglementation/fiches-thematiques/contrat-de-securisation-professionnelle-csp" target="_blank" rel="noopener">
+        <span class="t">Fiche réglementaire CSP</span>
+        <span class="u">unedic.org</span>
+      </a>
+      <a href="https://travail-emploi.gouv.fr/la-definition-du-licenciement-pour-motif-economique" target="_blank" rel="noopener">
+        <span class="t">Définition du licenciement économique</span>
+        <span class="u">travail-emploi.gouv.fr</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer class="disc">
+  <div class="wrap">
+    <p class="wordmark">Licenciement économique &amp; CSP</p>
+    <p>Guide informatif à destination des salariés. Informations à jour en <strong>juillet 2026</strong>, susceptibles d'évoluer&nbsp;; les montants et conditions dépendent de votre situation individuelle. Ce document ne constitue pas un conseil juridique et ne remplace pas les informations officielles ni l'avis d'un professionnel du droit.</p>
+  </div>
+</footer>
