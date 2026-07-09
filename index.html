@@ -574,7 +574,13 @@
 
         <div id="resultContent" hidden>
           <div class="result-hero">
-            <div class="lbl">Allocation ARE estimée</div>
+            <div class="lbl">Pendant le CSP — allocation ASP (si vous acceptez)</div>
+            <div class="big"><span id="rAspMoisNet">—</span> <small>€ net / mois</small></div>
+            <p class="note" id="rAspNote">75 % du brut de référence · versée pendant le CSP, sans délai</p>
+          </div>
+
+          <div class="result-hero">
+            <div class="lbl">ARE — si vous refusez le CSP (ou après le CSP)</div>
             <div class="big"><span id="rAreMoisNet">—</span> <small>€ net / mois</small></div>
             <p class="note"><span id="rAreMoisBrut">—</span> € brut/mois · <span id="rAreJour">—</span> € brut/jour</p>
           </div>
@@ -585,7 +591,15 @@
               <div class="v"><span id="rSjr">—</span> €</div>
             </div>
             <div class="row">
-              <div class="k">Durée d'indemnisation<small id="rDureeNote">selon vos droits</small></div>
+              <div class="k">Durée ASP pendant le CSP<small>12 mois max, dans la limite de vos droits</small></div>
+              <div class="v"><span id="rAspDureeMois">—</span> mois</div>
+            </div>
+            <div class="row">
+              <div class="k">Droits ARE restants après le CSP<small>si vous n'avez pas retrouvé d'emploi</small></div>
+              <div class="v"><span id="rApresCsp">—</span></div>
+            </div>
+            <div class="row">
+              <div class="k">Durée d'indemnisation ARE<small id="rDureeNote">selon vos droits</small></div>
               <div class="v"><span id="rDureeMois">—</span> mois<small><span id="rDureeJours">—</span> jours</small></div>
             </div>
             <div class="row">
@@ -638,6 +652,7 @@
       <p style="color:var(--muted);font-size:.9rem;margin:0">Salarié non-cadre de moins de 55 ans (≈ 39 000 € net/an), plusieurs années d'ancienneté. Chiffres arrondis, paramètres France&nbsp;Travail 2025-2026.</p>
       <ol>
         <li>Salaire de référence&nbsp;: <b>50 000 €</b> brut/an → <b>SJR = 50 000 / 365 ≈ 137,0 €</b>/jour.</li>
+        <li>Avec le CSP (≥ 1 an d'ancienneté)&nbsp;: <b>ASP = 75 %×137,0 ≈ 102,7 €</b>/jour, soit ≈ <b>3 082 €</b> brut/mois (≈ <b>2 959 €</b> net, l'ASP n'étant pas soumise à la CSG/CRDS), versée pendant les <b>12 mois</b> du CSP.</li>
         <li>ARE/jour = le plus élevé entre&nbsp;: 40,4 %×137,0 + 13,18 = <b>68,5 €</b> et 57 %×137,0 = <b>78,1 €</b> → on retient <b>78,1 €</b> brut/jour.</li>
         <li>ARE mensuelle ≈ 78,1 × 30 ≈ <b>2 343 €</b> brut/mois (≈ <b>2 170 €</b> net après CSG/CRDS et retraite compl.).</li>
         <li>Durée&nbsp;: jusqu'à <b>548 jours</b> (18 mois) pour un moins de 55 ans ayant assez d'ancienneté.</li>
@@ -869,6 +884,15 @@
     var areJourApres = degressif ? Math.max(areJour * DEG_COEF, DEG_PLANCHER) : areJour;
     var areMoisNetApres = areNetFromBrut(areJourApres) * 30;
 
+    // ASP (CSP) : 75 % du SJR si ≥ 1 an d'ancienneté (jamais moins que l'ARE),
+    // sinon montant aligné sur l'ARE. Pas de CSG/CRDS, −3 % du SJR (retraite compl.).
+    var anciennete1an = joursTravailles >= 365;
+    var aspJour = anciennete1an ? Math.max(0.75 * sjr, areJour) : areJour;
+    var aspJourNet = anciennete1an ? Math.max(aspJour - 0.03 * sjr, areJourNet) : areJourNet;
+    var aspMoisNet = aspJourNet * 30;
+    var dureeAsp = Math.min(365, duree);            // 12 mois max, dans la limite des droits
+    var resteApresCsp = Math.max(0, duree - dureeAsp); // jours d'ARE restants après le CSP
+
     // Total net sur la période
     var total;
     if (degressif && duree > DEG_APRES) {
@@ -892,6 +916,15 @@
       el("rDureeNote").textContent = duree >= maxDuree(age)
         ? "plafonnée par votre âge" : "à raison d'un jour indemnisé par jour travaillé";
     }
+
+    el("rAspMoisNet").textContent = eligible ? fmt(aspMoisNet) : "0";
+    el("rAspNote").textContent = anciennete1an
+      ? "75 % du brut de référence · " + fmt1(aspJour) + " € brut/jour · sans délai d'attente"
+      : "ancienneté < 1 an : montant aligné sur l'ARE (" + fmt1(aspJour) + " € brut/jour)";
+    el("rAspDureeMois").textContent = eligible ? fmt1(dureeAsp / 30.4) : "0";
+    el("rApresCsp").textContent = eligible
+      ? (resteApresCsp > 0 ? "≈ " + fmt1(resteApresCsp / 30.4) + " mois d'ARE" : "droits épuisés pendant le CSP")
+      : "—";
 
     el("rAreMoisNet").textContent = eligible ? fmt(areMoisNet) : "0";
     el("rAreMoisBrut").textContent = fmt(areMoisBrut);
