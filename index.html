@@ -15,6 +15,10 @@
     --amber-tint: #F6EBD9;
     --red:        #B23B3B;
     --red-tint:   #F4E4E1;
+    --violet:     #6C5CE7;
+    --violet-tint:#ECE9FB;
+    --coral:      #E8635A;
+    --coral-tint: #FBE7E3;
     --shadow:     0 1px 2px rgba(27,42,74,.05), 0 8px 28px rgba(27,42,74,.07);
 
     --serif: Georgia, "Iowan Old Style", "Palatino Linotype", "Times New Roman", serif;
@@ -41,6 +45,10 @@
       --amber-tint: #2A2114;
       --red:        #E07B72;
       --red-tint:   #2A1817;
+      --violet:     #9D8FF2;
+      --violet-tint:#221E33;
+      --coral:      #F08A80;
+      --coral-tint: #2E1A18;
       --shadow:     0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35);
     }
   }
@@ -52,6 +60,8 @@
     --teal:#0E7C6B; --teal-tint:#E3F0EC;
     --amber:#C77D28; --amber-tint:#F6EBD9;
     --red:#B23B3B; --red-tint:#F4E4E1;
+    --violet:#6C5CE7; --violet-tint:#ECE9FB;
+    --coral:#E8635A; --coral-tint:#FBE7E3;
     --shadow:0 1px 2px rgba(27,42,74,.05), 0 8px 28px rgba(27,42,74,.07);
   }
   :root[data-theme="dark"] {
@@ -62,6 +72,8 @@
     --teal:#45B8A2; --teal-tint:#12241F;
     --amber:#E0A24A; --amber-tint:#2A2114;
     --red:#E07B72; --red-tint:#2A1817;
+    --violet:#9D8FF2; --violet-tint:#221E33;
+    --coral:#F08A80; --coral-tint:#2E1A18;
     --shadow:0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35);
   }
 
@@ -110,6 +122,8 @@
     padding-block: clamp(3rem, 9vw, 6rem) clamp(2rem, 5vw, 3rem);
     background:
       radial-gradient(120% 80% at 88% -10%, var(--teal-tint) 0%, transparent 55%),
+      radial-gradient(80% 60% at 5% 110%, var(--violet-tint) 0%, transparent 50%),
+      radial-gradient(60% 50% at 60% 120%, var(--amber-tint) 0%, transparent 55%),
       var(--paper);
   }
   .hero h1 {
@@ -135,7 +149,16 @@
   .tile {
     background: var(--surface); border: 1px solid var(--line);
     border-radius: 14px; padding: 1.3rem 1.1rem; box-shadow: var(--shadow);
+    border-top: 4px solid var(--teal);
+    transition: transform .18s ease;
   }
+  .tile:hover { transform: translateY(-4px) rotate(-.4deg); }
+  .tiles .tile:nth-child(2) { border-top-color: var(--violet); }
+  .tiles .tile:nth-child(3) { border-top-color: var(--amber); }
+  .tiles .tile:nth-child(4) { border-top-color: var(--coral); }
+  .tiles .tile:nth-child(2) .num { color: var(--violet); }
+  .tiles .tile:nth-child(3) .num { color: var(--amber); }
+  .tiles .tile:nth-child(4) .num { color: var(--coral); }
   .tile .num {
     font-family: var(--serif); font-weight: 600;
     font-size: clamp(1.7rem, 4vw, 2.2rem); color: var(--teal);
@@ -181,7 +204,13 @@
     background: var(--surface); border: 2px solid var(--teal); color: var(--teal);
     display: grid; place-items: center; font-family: var(--serif); font-weight: 600; font-size: 1.05rem;
     z-index: 1; box-shadow: var(--shadow);
+    transition: transform .18s ease;
   }
+  .step:hover .marker { transform: scale(1.12); }
+  .timeline .step:nth-child(2) .marker { border-color: var(--violet); color: var(--violet); }
+  .timeline .step:nth-child(3) .marker { border-color: var(--amber); color: var(--amber); }
+  .timeline .step:nth-child(4) .marker { border-color: var(--coral); color: var(--coral); }
+  .timeline .step:nth-child(5) .marker { border-color: var(--violet); color: var(--violet); }
   .step .body h3 { margin-top: .25rem; }
   .step .body p { margin-bottom: .4rem; }
 
@@ -211,7 +240,12 @@
   .bcard {
     background: var(--surface); border: 1px solid var(--line); border-radius: 16px;
     padding: 1.4rem; box-shadow: var(--shadow);
+    transition: transform .18s ease, border-color .18s ease;
   }
+  .bcard:hover { transform: translateY(-4px); border-color: var(--teal); }
+  .grid2 .bcard:nth-child(2):hover { border-color: var(--violet); }
+  .grid2 .bcard:nth-child(3):hover { border-color: var(--amber); }
+  .grid2 .bcard:nth-child(4):hover { border-color: var(--coral); }
   .bcard .icon {
     font-family: var(--mono); font-weight: 600; font-size: .8rem; color: var(--teal);
     background: var(--teal-tint); border-radius: 8px; padding: .35rem .55rem; display: inline-block; margin-bottom: .7rem;
@@ -282,7 +316,10 @@
     font-family: var(--sans); font-weight: 600; font-size: .9rem; cursor: pointer;
     border: 1px solid var(--teal); background: var(--teal); color: #fff;
     padding: .6rem 1rem; border-radius: 10px;
+    transition: transform .15s ease, box-shadow .15s ease;
   }
+  .btn:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+  .btn:active { transform: translateY(0) scale(.98); }
   .btn.ghost { background: transparent; color: var(--teal); }
   .btn:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
 
@@ -349,8 +386,8 @@
 </style>
 
 <a class="sim-banner" href="#simulateur">
-  <span class="tag">Simulateur</span>
-  <span>Estimez vos allocations ARE / ARCE — accéder directement au simulateur</span>
+  <span class="tag">🧮 Simulateur</span>
+  <span>Estimez vos allocations ASP / ARE / ARCE — accéder directement au simulateur ✨</span>
   <span class="arrow" aria-hidden="true">&rarr;</span>
 </a>
 
@@ -358,14 +395,14 @@
   <div class="wrap">
     <p class="eyebrow lede-eyebrow">Guide pratique · Droit du travail français</p>
     <h1>Licenciement économique&nbsp;: <span class="kicker">comprendre le CSP</span> et vos droits</h1>
-    <p class="intro">Vous êtes concerné par un licenciement pour motif économique&nbsp;? Ce guide vous explique, simplement, ce qu'est le <strong>Contrat de sécurisation professionnelle (CSP)</strong>, ce qu'il change pour vous, et comment décider en connaissance de cause.</p>
+    <p class="intro">Vous êtes concerné par un licenciement pour motif économique&nbsp;? <strong>Pas de panique.</strong> Ce guide vous explique, simplement, ce qu'est le <strong>Contrat de sécurisation professionnelle (CSP)</strong>, ce qu'il change pour vous, et comment décider en connaissance de cause — souvent, c'est une vraie <strong>rampe de lancement</strong> vers la suite. 🚀</p>
     <span class="stamp"><span class="dot"></span>À jour en juillet 2026 · Convention CSP prolongée jusqu'au 31 décembre 2026</span>
   </div>
 </header>
 
 <section class="band">
   <div class="wrap">
-    <p class="eyebrow">L'essentiel en 30 secondes</p>
+    <p class="eyebrow">⏱️ L'essentiel en 30 secondes</p>
     <h2>Ce qu'il faut retenir</h2>
     <p class="sub">Le CSP est un dispositif d'accompagnement renforcé, proposé lors d'un licenciement économique dans les entreprises de <strong>moins de 1&nbsp;000 salariés</strong> (ou en redressement / liquidation judiciaire, quelle que soit la taille).</p>
     <div class="tiles">
@@ -395,7 +432,7 @@
 
 <section>
   <div class="wrap">
-    <p class="eyebrow">Le point de départ</p>
+    <p class="eyebrow">🧭 Le point de départ</p>
     <h2>Qu'est-ce qu'un licenciement économique&nbsp;?</h2>
     <p>C'est un licenciement <strong>qui n'est pas lié à votre personne</strong> — ni à votre comportement, ni à vos performances. Il découle d'un motif économique touchant l'entreprise (article L1233-3 du Code du travail)&nbsp;:</p>
     <ul class="clean">
@@ -414,7 +451,7 @@
 
 <section class="band">
   <div class="wrap">
-    <p class="eyebrow">Le dispositif</p>
+    <p class="eyebrow">🗺️ Le dispositif</p>
     <h2>Le CSP, comment ça se passe&nbsp;?</h2>
     <p class="sub">Le Contrat de sécurisation professionnelle est piloté par France&nbsp;Travail. Son but&nbsp;: vous ramener vers l'emploi le plus vite possible, tout en maintenant un revenu. Voici le déroulé, étape par étape.</p>
     <div class="timeline">
@@ -460,7 +497,7 @@
 
 <section>
   <div class="wrap">
-    <p class="eyebrow">La décision</p>
+    <p class="eyebrow">⚖️ La décision</p>
     <h2>Accepter ou refuser&nbsp;? Le comparatif</h2>
     <p class="sub">C'est <strong>votre choix</strong>. Voici ce que change chaque option pour un salarié ayant au moins 1&nbsp;an d'ancienneté.</p>
     <div class="compare">
@@ -494,7 +531,7 @@
 
 <section class="band">
   <div class="wrap">
-    <p class="eyebrow">Le revenu</p>
+    <p class="eyebrow">💶 Le revenu</p>
     <h2>Combien vais-je toucher&nbsp;?</h2>
     <p class="sub">L'<strong>Allocation de sécurisation professionnelle (ASP)</strong> est versée par France&nbsp;Travail pendant 12 mois maximum.</p>
     <ul class="clean">
@@ -512,7 +549,7 @@
 
 <section id="simulateur">
   <div class="wrap-wide">
-    <p class="eyebrow">Simulateur</p>
+    <p class="eyebrow">🧮 Simulateur</p>
     <h2>Estimez ce que vous toucherez</h2>
     <p class="sub">Renseignez votre situation pour obtenir une estimation de votre <strong>allocation chômage (ARE)</strong>, du <strong>capital ARCE</strong> si vous créez une entreprise, et de vos revenus <strong>si vous reprenez un emploi</strong>. Ceci est une estimation&nbsp;: seuls les calculs de France&nbsp;Travail font foi.</p>
 
@@ -563,6 +600,7 @@
           <input type="number" id="salaireRepris" min="0" step="100" inputmode="numeric" placeholder="ex. 1600" />
         </div>
 
+        <button type="button" class="btn" id="btnRecalc">Recalculer ✨</button>
         <button type="button" class="btn ghost" id="btnExemple">Voir un exemple (50 000 €/an)</button>
       </div>
 
@@ -667,27 +705,27 @@
 
 <section>
   <div class="wrap">
-    <p class="eyebrow">Les coups de pouce</p>
+    <p class="eyebrow">🚀 Les coups de pouce</p>
     <h2>Ce qui aide au retour à l'emploi</h2>
     <p class="sub">Le CSP ne se limite pas à une allocation. Plusieurs primes récompensent une reprise rapide d'activité.</p>
     <div class="grid2">
       <div class="bcard">
-        <span class="icon">PRIME AU RECLASSEMENT</span>
+        <span class="icon">🎁 PRIME AU RECLASSEMENT</span>
         <h3>Reprendre vite&nbsp;= être récompensé</h3>
         <p>Si vous retrouvez un emploi durable (CDI, CDD ou intérim d'au moins 6 mois) <strong>avant la fin du 10ᵉ mois</strong>, vous touchez une prime égale à <strong>50&nbsp;% de vos droits ASP restants</strong>, versée en deux fois. Réservée aux salariés ayant ≥&nbsp;1 an d'ancienneté.</p>
       </div>
       <div class="bcard">
-        <span class="icon">INDEMNITÉ DIFFÉRENTIELLE (IDR)</span>
+        <span class="icon">🤝 INDEMNITÉ DIFFÉRENTIELLE (IDR)</span>
         <h3>Accepter un poste moins payé sans tout perdre</h3>
         <p>Si le nouvel emploi est <strong>moins bien rémunéré</strong> qu'avant, l'IDR compense la différence — (SJR&nbsp;×&nbsp;30) moins le salaire brut mensuel — pendant 12 mois maximum, dans la limite de 50&nbsp;% de vos droits ASP restants.</p>
       </div>
       <div class="bcard">
-        <span class="icon">PÉRIODES D'ACTIVITÉ</span>
+        <span class="icon">💼 PÉRIODES D'ACTIVITÉ</span>
         <h3>Travailler pendant le CSP</h3>
         <p>Vous pouvez enchaîner des missions de <strong>3 jours à 6 mois</strong>, avec l'accord de votre conseiller. Si l'activité commence après le 7ᵉ mois, le CSP est <strong>prolongé d'autant</strong> (jusqu'à 3 mois de plus).</p>
       </div>
       <div class="bcard">
-        <span class="icon">FORMATION</span>
+        <span class="icon">🎓 FORMATION</span>
         <h3>Se reconvertir ou monter en compétences</h3>
         <p>Des <strong>formations financées</strong> peuvent être intégrées à votre plan de sécurisation professionnelle — l'occasion de préparer une reconversion ou de renforcer votre profil.</p>
       </div>
@@ -697,7 +735,7 @@
 
 <section>
   <div class="wrap">
-    <p class="eyebrow">La santé</p>
+    <p class="eyebrow">🩺 La santé</p>
     <h2>Et ma mutuelle d'entreprise&nbsp;?</h2>
     <p class="sub">Bonne nouvelle&nbsp;: quitter l'entreprise ne signifie pas perdre sa complémentaire santé. C'est la <strong>portabilité</strong> (art. L911-8 du code de la sécurité sociale), et elle s'applique aussi avec le CSP.</p>
 
@@ -708,22 +746,22 @@
 
     <div class="grid2">
       <div class="bcard">
-        <span class="icon">DURÉE</span>
+        <span class="icon">⏳ DURÉE</span>
         <h3>Jusqu'à 12 mois, sans rien payer</h3>
         <p>La couverture est maintenue pendant une durée égale à celle de votre <strong>dernier contrat de travail</strong> (arrondie au mois supérieur), dans la limite de <strong>12 mois</strong>. Elle est financée par l'employeur et les salariés actifs&nbsp;: <strong>zéro cotisation</strong> pour vous.</p>
       </div>
       <div class="bcard">
-        <span class="icon">CONDITIONS</span>
+        <span class="icon">✅ CONDITIONS</span>
         <h3>Trois cases à cocher</h3>
         <p>Être couvert par la mutuelle de l'entreprise au moment du départ&nbsp;; une rupture <strong>autre que faute lourde</strong> (le licenciement économique et le CSP y ouvrent droit)&nbsp;; et être <strong>indemnisé par France Travail</strong> (l'ASP du CSP compte).</p>
       </div>
       <div class="bcard">
-        <span class="icon">DÉMARCHES</span>
+        <span class="icon">📋 DÉMARCHES</span>
         <h3>Presque automatique</h3>
         <p>L'employeur signale votre départ à l'assureur et mentionne la portabilité dans le <strong>certificat de travail</strong>. De votre côté, envoyez à l'assureur votre <strong>attestation France Travail</strong>, et prévenez-le si vous retrouvez un emploi (la portabilité s'arrête alors).</p>
       </div>
       <div class="bcard">
-        <span class="icon">APRÈS · LOI ÉVIN</span>
+        <span class="icon">🛟 APRÈS · LOI ÉVIN</span>
         <h3>Et au bout des 12 mois&nbsp;?</h3>
         <p>L'assureur doit vous proposer un <strong>contrat individuel</strong> sans questionnaire de santé, avec un tarif encadré&nbsp;: identique aux salariés la 1ʳᵉ année, puis au plus <strong>+25&nbsp;%</strong> la 2ᵉ et <strong>+50&nbsp;%</strong> la 3ᵉ. Vous avez <strong>6 mois</strong> après la fin de la portabilité pour en faire la demande.</p>
       </div>
@@ -733,7 +771,7 @@
 
 <section class="band">
   <div class="wrap">
-    <p class="eyebrow">Questions fréquentes</p>
+    <p class="eyebrow">💬 Questions fréquentes</p>
     <h2>Idées reçues &amp; réponses</h2>
     <div style="margin-top:1.4rem">
       <details>
@@ -766,7 +804,7 @@
 
 <section>
   <div class="wrap">
-    <p class="eyebrow">Aller plus loin</p>
+    <p class="eyebrow">📚 Aller plus loin</p>
     <h2>Sources officielles</h2>
     <p class="sub">Ce guide s'appuie sur les sources publiques ci-dessous. En cas de doute sur votre situation, rapprochez-vous de votre conseiller France&nbsp;Travail ou d'un avocat en droit du travail.</p>
     <div class="sources">
@@ -981,14 +1019,34 @@
   ["salaire", "age", "dateEntree", "dateFin", "salaireRepris"].forEach(function (id) {
     el(id).addEventListener("input", compute);
   });
-  document.querySelectorAll('input[name="periode"], input[name="statut"]').forEach(function (r) {
+  document.querySelectorAll('input[name="statut"]').forEach(function (r) {
     r.addEventListener("change", compute);
+  });
+
+  // Bascule mois <-> année : convertit la valeur saisie pour garder le même salaire
+  var lastPeriode = document.querySelector('input[name="periode"]:checked').value;
+  document.querySelectorAll('input[name="periode"]').forEach(function (r) {
+    r.addEventListener("change", function () {
+      var s = parseFloat(el("salaire").value);
+      if (r.value !== lastPeriode && isFinite(s) && s > 0) {
+        el("salaire").value = r.value === "an" ? Math.round(s * 12) : Math.round(s / 12);
+      }
+      lastPeriode = r.value;
+      compute();
+    });
+  });
+
+  // Bouton recalculer
+  el("btnRecalc").addEventListener("click", function () {
+    compute();
+    el("resultPanel").scrollIntoView({ behavior: "smooth", block: "nearest" });
   });
 
   // Exemple : 50 000 € brut/an ≈ 39 000 € net/an, non-cadre, < 55 ans
   el("btnExemple").addEventListener("click", function () {
     el("stNonCadre").checked = true;
     el("perAn").checked = true;
+    lastPeriode = "an";
     el("salaire").value = 39000;
     el("age").value = 42;
     el("salaireRepris").value = 1600;
