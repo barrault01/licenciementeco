@@ -78,6 +78,7 @@
   }
 
   * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
   body {
     margin: 0;
     background: var(--paper);
@@ -367,6 +368,33 @@
   .example-box li b { color: var(--ink); font-variant-numeric: tabular-nums; }
   .disclaimer-inline { font-size: .8rem; color: var(--muted); margin-top: 1.2rem; }
   .anchor-link { display:inline-block; margin-top: .6rem; font-weight: 600; }
+
+  /* ---------- FRISE PERSONNALISÉE ---------- */
+  .frise-box {
+    margin-top: 1.4rem; background: var(--surface); border: 1px solid var(--line);
+    border-radius: 18px; padding: 1.6rem; box-shadow: var(--shadow);
+  }
+  .frise-box h3 { margin-bottom: .3rem; }
+  .frise-box .fr-sub { font-size: .9rem; color: var(--muted); margin-bottom: 1.5rem; }
+  .fr-track { display: flex; height: 3.4rem; border-radius: 10px; overflow: hidden; border: 1px solid var(--line-soft); }
+  .fr-seg {
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .05rem;
+    color: #fff; min-width: 0; overflow: hidden; padding-inline: .4rem;
+  }
+  .fr-seg b { font-size: .78rem; letter-spacing: .02em; white-space: nowrap; }
+  .fr-seg span { font-size: .72rem; opacity: .92; white-space: nowrap; }
+  .fr-seg.csp { background: var(--teal); }
+  .fr-seg.are { background: var(--violet); }
+  .fr-dates { position: relative; height: 2.7rem; margin-top: .55rem; font-size: .74rem; color: var(--muted); }
+  .fr-date { position: absolute; top: 0; transform: translateX(-50%); text-align: center; line-height: 1.35; white-space: nowrap; }
+  .fr-date b { display: block; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .fr-date.start { left: 0; transform: none; text-align: left; }
+  .fr-date.end { left: 100%; transform: translateX(-100%); text-align: right; }
+  @media (max-width: 720px) {
+    .fr-seg b { font-size: .68rem; }
+    .fr-seg span { font-size: .6rem; }
+    .fr-dates { font-size: .66rem; }
+  }
 
   /* ---------- DROITS CHART (CSP puis ARE) ---------- */
   .droits-chart { margin: 1.4rem 0 .6rem; display: grid; gap: .9rem; }
@@ -755,6 +783,20 @@
       </div>
     </div>
 
+    <div class="frise-box" id="friseBlock" hidden>
+      <h3>📅 De la fin du contrat à la fin de vos droits</h3>
+      <p class="fr-sub">Frise estimée à partir de vos informations&nbsp;: le CSP d'abord, puis le solde de vos droits ARE.</p>
+      <div class="fr-track">
+        <div class="fr-seg csp" id="frSegCsp"><b>CSP · ASP</b><span id="frCspInfo">—</span></div>
+        <div class="fr-seg are" id="frSegAre"><b>Chômage · ARE</b><span id="frAreInfo">—</span></div>
+      </div>
+      <div class="fr-dates">
+        <span class="fr-date start"><b id="frDate0">—</b>fin du contrat</span>
+        <span class="fr-date" id="frDateMid"><b id="frDate1">—</b>fin du CSP</span>
+        <span class="fr-date end"><b id="frDate2">—</b><span id="frDate2Lbl">fin des droits ARE</span></span>
+      </div>
+    </div>
+
     <div class="example-box">
       <h3>Exemple pas à pas — 50 000 € brut / an</h3>
       <p style="color:var(--muted);font-size:.9rem;margin:0">Salarié non-cadre de moins de 55 ans (≈ 39 000 € net/an), plusieurs années d'ancienneté. Chiffres arrondis, paramètres France&nbsp;Travail 2025-2026.</p>
@@ -955,6 +997,7 @@
     if (!(salaire > 0) || !(age > 0) || !dEntree) {
       el("resultEmpty").hidden = false;
       el("resultContent").hidden = true;
+      el("friseBlock").hidden = true;
       return;
     }
 
@@ -1047,6 +1090,33 @@
 
     el("rArce").textContent = eligible ? fmt(arce) : "0";
     el("rArceReste").textContent = eligible ? fmt(arceReste) : "0";
+
+    // Frise chronologique personnalisée
+    var friseBlock = el("friseBlock");
+    friseBlock.hidden = !eligible;
+    if (eligible) {
+      var fmtDate = function (d) {
+        return d.toLocaleDateString("fr-FR", { day: "numeric", month: "short", year: "numeric" });
+      };
+      var dFinCsp = new Date(fin.getTime() + dureeAsp * 86400000);
+      var dFinDroits = new Date(fin.getTime() + (dureeAsp + resteApresCsp) * 86400000);
+      var cspPct = resteApresCsp > 0 ? (dureeAsp / duree) * 100 : 100;
+
+      el("frSegCsp").style.width = cspPct + "%";
+      el("frCspInfo").textContent = fmt(aspMoisNet) + " € net/mois · " + fmt1(dureeAsp / 30.4) + " mois";
+      el("frSegAre").style.display = resteApresCsp > 0 ? "flex" : "none";
+      el("frSegAre").style.width = (100 - cspPct) + "%";
+      el("frAreInfo").textContent = fmt(areMoisNet) + " € net/mois · " + fmt1(resteApresCsp / 30.4) + " mois";
+
+      el("frDate0").textContent = fmtDate(fin);
+      // Masque la date intermédiaire si le segment ARE est trop court (risque de chevauchement)
+      var midVisible = resteApresCsp > 0 && cspPct <= 78;
+      el("frDateMid").style.display = midVisible ? "" : "none";
+      el("frDateMid").style.left = cspPct + "%";
+      el("frDate1").textContent = fmtDate(dFinCsp);
+      el("frDate2").textContent = fmtDate(dFinDroits);
+      el("frDate2Lbl").textContent = resteApresCsp > 0 ? "fin des droits ARE" : "fin du CSP et des droits";
+    }
 
     // Reprise d'emploi (cumul ARE + salaire)
     var repriseBlock = el("repriseBlock");
