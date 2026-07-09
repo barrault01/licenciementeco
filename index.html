@@ -303,6 +303,12 @@
     border-radius: 10px; -webkit-appearance: none; appearance: none;
   }
   .field input:focus-visible { outline: 2px solid var(--teal); outline-offset: 1px; border-color: var(--teal); }
+  .field .ferr { display: none; color: var(--red); font-size: .8rem; font-weight: 500; margin: .35rem 0 0; }
+  .field.invalid .ferr { display: block; }
+  .field.invalid input[type="number"], .field.invalid input[type="date"] {
+    border-color: var(--red); background: var(--red-tint);
+  }
+  .field.invalid > label { color: var(--red); }
   .segset { display: inline-flex; background: var(--band); border: 1px solid var(--line); border-radius: 10px; padding: 3px; gap: 2px; }
   .segset input { position: absolute; opacity: 0; pointer-events: none; }
   .segset label {
@@ -559,18 +565,20 @@
 
         <div class="field">
           <label for="dateEntree">Date d'entrée dans l'entreprise</label>
-          <input type="date" id="dateEntree" />
+          <input type="date" id="dateEntree" aria-describedby="errDateEntree" />
+          <p class="ferr" id="errDateEntree">Indiquez votre date d'entrée dans l'entreprise.</p>
         </div>
 
         <div class="field">
           <label for="dateFin">Date de fin de contrat <span class="hint">(peut être future, pour anticiper)</span></label>
-          <input type="date" id="dateFin" />
+          <input type="date" id="dateFin" aria-describedby="errDateFin" />
+          <p class="ferr" id="errDateFin">La date de fin doit être postérieure à la date d'entrée.</p>
         </div>
 
         <div class="field">
           <label for="salaire">Salaire net</label>
           <div class="field-row">
-            <input type="number" id="salaire" min="0" step="100" inputmode="numeric" placeholder="ex. 2400" />
+            <input type="number" id="salaire" min="0" step="100" inputmode="numeric" placeholder="ex. 2400" aria-describedby="errSalaire" />
             <div class="segset" role="group" aria-label="Périodicité du salaire">
               <input type="radio" name="periode" id="perMois" value="mois" checked />
               <label for="perMois">/ mois</label>
@@ -578,6 +586,7 @@
               <label for="perAn">/ an</label>
             </div>
           </div>
+          <p class="ferr" id="errSalaire">Indiquez votre salaire net (supérieur à 0).</p>
         </div>
 
         <div class="field">
@@ -592,7 +601,8 @@
 
         <div class="field">
           <label for="age">Âge à la fin du contrat</label>
-          <input type="number" id="age" min="16" max="70" step="1" inputmode="numeric" placeholder="ex. 42" />
+          <input type="number" id="age" min="16" max="70" step="1" inputmode="numeric" placeholder="ex. 42" aria-describedby="errAge" />
+          <p class="ferr" id="errAge">Indiquez votre âge (entre 16 et 70 ans).</p>
         </div>
 
         <div class="field">
@@ -1015,9 +1025,43 @@
     el("dateEntree").max = iso;
   })();
 
+  // Validation des champs requis
+  var FIELDS = [
+    { id: "dateEntree", ok: function () { return !!el("dateEntree").value; } },
+    { id: "dateFin", ok: function () {
+        var e = el("dateEntree").value, f = el("dateFin").value;
+        return !e || !f || new Date(f) > new Date(e);
+      } },
+    { id: "salaire", ok: function () { return parseFloat(el("salaire").value) > 0; } },
+    { id: "age", ok: function () {
+        var a = parseInt(el("age").value, 10);
+        return a >= 16 && a <= 70;
+      } }
+  ];
+  function setInvalid(id, invalid) {
+    var field = el(id).closest(".field");
+    if (field) field.classList.toggle("invalid", invalid);
+    el(id).setAttribute("aria-invalid", invalid ? "true" : "false");
+  }
+  function validate() {
+    var allOk = true;
+    FIELDS.forEach(function (f) {
+      var ok = f.ok();
+      setInvalid(f.id, !ok);
+      if (!ok) allOk = false;
+    });
+    return allOk;
+  }
+  // Efface les erreurs au fur et à mesure que les champs sont corrigés
+  function clearFixed() {
+    FIELDS.forEach(function (f) {
+      if (f.ok()) setInvalid(f.id, false);
+    });
+  }
+
   // Écouteurs
   ["salaire", "age", "dateEntree", "dateFin", "salaireRepris"].forEach(function (id) {
-    el(id).addEventListener("input", compute);
+    el(id).addEventListener("input", function () { clearFixed(); compute(); });
   });
   document.querySelectorAll('input[name="statut"]').forEach(function (r) {
     r.addEventListener("change", compute);
@@ -1036,8 +1080,13 @@
     });
   });
 
-  // Bouton recalculer
+  // Bouton recalculer : signale les champs manquants, sinon calcule
   el("btnRecalc").addEventListener("click", function () {
+    if (!validate()) {
+      var firstInvalid = document.querySelector(".field.invalid input");
+      if (firstInvalid) firstInvalid.focus();
+      return;
+    }
     compute();
     el("resultPanel").scrollIntoView({ behavior: "smooth", block: "nearest" });
   });
@@ -1056,6 +1105,7 @@
     el("dateEntree").value = entree.getFullYear() + "-" +
       String(entree.getMonth() + 1).padStart(2, "0") + "-" +
       String(entree.getDate()).padStart(2, "0");
+    clearFixed();
     compute();
     el("resultPanel").scrollIntoView({ behavior: "smooth", block: "nearest" });
   });
