@@ -325,12 +325,34 @@
   .disclaimer-inline { font-size: .8rem; color: var(--muted); margin-top: 1.2rem; }
   .anchor-link { display:inline-block; margin-top: .6rem; font-weight: 600; }
 
+  /* ---------- TOP BANNER ---------- */
+  .sim-banner {
+    display: flex; align-items: center; justify-content: center; gap: .7rem; flex-wrap: wrap;
+    background: var(--teal); color: #fff;
+    padding: .7rem 1.4rem; text-align: center;
+    font-weight: 600; font-size: .93rem; text-decoration: none;
+  }
+  .sim-banner .tag {
+    font-family: var(--mono); font-size: .66rem; letter-spacing: .12em; text-transform: uppercase;
+    background: rgba(255,255,255,.18); padding: .2rem .55rem; border-radius: 6px;
+  }
+  .sim-banner .arrow { transition: transform .15s ease; }
+  .sim-banner:hover .arrow { transform: translateX(4px); }
+  .sim-banner:focus-visible { outline: 2px solid #fff; outline-offset: -3px; }
+  @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+
   @media (max-width: 720px) {
     .tiles { grid-template-columns: repeat(2, 1fr); }
     .compare, .grid2, .sources, .sim { grid-template-columns: 1fr; }
   }
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>
+
+<a class="sim-banner" href="#simulateur">
+  <span class="tag">Simulateur</span>
+  <span>Estimez vos allocations ARE / ARCE — accéder directement au simulateur</span>
+  <span class="arrow" aria-hidden="true">&rarr;</span>
+</a>
 
 <header class="hero">
   <div class="wrap">
@@ -504,7 +526,7 @@
         </div>
 
         <div class="field">
-          <label for="dateFin">Date de fin de contrat <span class="hint">(par défaut&nbsp;: aujourd'hui)</span></label>
+          <label for="dateFin">Date de fin de contrat <span class="hint">(peut être future, pour anticiper)</span></label>
           <input type="date" id="dateFin" />
         </div>
 
@@ -653,6 +675,42 @@
         <span class="icon">FORMATION</span>
         <h3>Se reconvertir ou monter en compétences</h3>
         <p>Des <strong>formations financées</strong> peuvent être intégrées à votre plan de sécurisation professionnelle — l'occasion de préparer une reconversion ou de renforcer votre profil.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="eyebrow">La santé</p>
+    <h2>Et ma mutuelle d'entreprise&nbsp;?</h2>
+    <p class="sub">Bonne nouvelle&nbsp;: quitter l'entreprise ne signifie pas perdre sa complémentaire santé. C'est la <strong>portabilité</strong> (art. L911-8 du code de la sécurité sociale), et elle s'applique aussi avec le CSP.</p>
+
+    <div class="callout">
+      <span class="tag">Portabilité</span>
+      <p>Vous conservez <strong>gratuitement</strong> votre mutuelle santé <em>et</em> votre prévoyance (incapacité, invalidité, décès) après la fin du contrat, avec les <strong>mêmes garanties</strong> que les salariés en poste. Vos ayants droit (conjoint, enfants) qui étaient couverts le restent aussi.</p>
+    </div>
+
+    <div class="grid2">
+      <div class="bcard">
+        <span class="icon">DURÉE</span>
+        <h3>Jusqu'à 12 mois, sans rien payer</h3>
+        <p>La couverture est maintenue pendant une durée égale à celle de votre <strong>dernier contrat de travail</strong> (arrondie au mois supérieur), dans la limite de <strong>12 mois</strong>. Elle est financée par l'employeur et les salariés actifs&nbsp;: <strong>zéro cotisation</strong> pour vous.</p>
+      </div>
+      <div class="bcard">
+        <span class="icon">CONDITIONS</span>
+        <h3>Trois cases à cocher</h3>
+        <p>Être couvert par la mutuelle de l'entreprise au moment du départ&nbsp;; une rupture <strong>autre que faute lourde</strong> (le licenciement économique et le CSP y ouvrent droit)&nbsp;; et être <strong>indemnisé par France Travail</strong> (l'ASP du CSP compte).</p>
+      </div>
+      <div class="bcard">
+        <span class="icon">DÉMARCHES</span>
+        <h3>Presque automatique</h3>
+        <p>L'employeur signale votre départ à l'assureur et mentionne la portabilité dans le <strong>certificat de travail</strong>. De votre côté, envoyez à l'assureur votre <strong>attestation France Travail</strong>, et prévenez-le si vous retrouvez un emploi (la portabilité s'arrête alors).</p>
+      </div>
+      <div class="bcard">
+        <span class="icon">APRÈS · LOI ÉVIN</span>
+        <h3>Et au bout des 12 mois&nbsp;?</h3>
+        <p>L'assureur doit vous proposer un <strong>contrat individuel</strong> sans questionnaire de santé, avec un tarif encadré&nbsp;: identique aux salariés la 1ʳᵉ année, puis au plus <strong>+25&nbsp;%</strong> la 2ᵉ et <strong>+50&nbsp;%</strong> la 3ᵉ. Vous avez <strong>6 mois</strong> après la fin de la portabilité pour en faire la demande.</p>
       </div>
     </div>
   </div>
@@ -876,14 +934,13 @@
     }
   }
 
-  // Init : date de fin = aujourd'hui
+  // Init : date de fin = aujourd'hui (mais peut être future, pour se projeter)
   (function initDates() {
     var today = new Date();
     var iso = today.getFullYear() + "-" +
       String(today.getMonth() + 1).padStart(2, "0") + "-" +
       String(today.getDate()).padStart(2, "0");
     el("dateFin").value = iso;
-    el("dateFin").max = iso;
     el("dateEntree").max = iso;
   })();
 
