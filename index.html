@@ -1186,14 +1186,20 @@
     }
   }
 
-  // Init : date de fin = aujourd'hui (mais peut être future, pour se projeter)
+  // Init : date de fin = aujourd'hui (mais peut être future, pour se projeter),
+  // date d'entrée pré-remplie à il y a 2 ans
   (function initDates() {
+    var isoDate = function (d) {
+      return d.getFullYear() + "-" +
+        String(d.getMonth() + 1).padStart(2, "0") + "-" +
+        String(d.getDate()).padStart(2, "0");
+    };
     var today = new Date();
-    var iso = today.getFullYear() + "-" +
-      String(today.getMonth() + 1).padStart(2, "0") + "-" +
-      String(today.getDate()).padStart(2, "0");
-    el("dateFin").value = iso;
-    el("dateEntree").max = iso;
+    el("dateFin").value = isoDate(today);
+    el("dateEntree").max = isoDate(today);
+    var entree = new Date(today);
+    entree.setFullYear(entree.getFullYear() - 2);
+    el("dateEntree").value = isoDate(entree);
   })();
 
   // Validation des champs requis : check() renvoie un message d'erreur, ou null si valide
