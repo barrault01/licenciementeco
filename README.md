@@ -5,8 +5,25 @@ et surtout le **Contrat de sécurisation professionnelle (CSP)** en droit du tra
 
 ## Contenu
 
-- [`index.html`](./index.html) — page web autonome (guide visuel destiné aux salariés).
-  Ouvrez-la dans un navigateur, ou publiez-la telle quelle.
+- [`index.html`](./index.html) — page web autonome (guide visuel destiné aux salariés)
+  incluant un **simulateur ARE / ARCE**. Ouvrez-la dans un navigateur, ou publiez-la telle quelle.
+
+## Simulateur
+
+À partir de la **date d'entrée**, du **salaire net** (mensuel ou annuel), du **statut** et de
+l'**âge**, le simulateur estime :
+
+- l'**ARE** (allocation chômage) : montant journalier, mensuel et durée d'indemnisation ;
+- l'**ARCE** : capital versé (60 % des droits) en cas de création / reprise d'entreprise ;
+- la **reprise d'emploi** : cumul salaire + ARE et prolongation des droits.
+
+Paramètres France Travail 2025-2026 : partie fixe 13,18 €/j, allocation minimale 32,13 €/j,
+ARE/jour = max(40,4 % × SJR + partie fixe ; 57 % × SJR) plafonnée à 75 % du SJR ; durée max
+548 j (< 55 ans) / 685 j (55-56) / 822 j (≥ 57) ; dégressivité −30 % au 7ᵉ mois si SJR > 159,68 €
+et < 55 ans (plancher 92,57 €/j).
+
+> Il s'agit d'une **estimation** (conversion net→brut approximative, hypothèse d'emploi continu).
+> Seuls les calculs de France Travail font foi.
 
 ## Points couverts
 
