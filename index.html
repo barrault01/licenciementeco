@@ -329,6 +329,10 @@
   .btn:active { transform: translateY(0) scale(.98); }
   .btn.ghost { background: transparent; color: var(--teal); }
   .btn:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
+  .ex-group { margin-top: 1.1rem; }
+  .ex-lbl { display: block; font-size: .78rem; font-weight: 600; color: var(--muted); margin-bottom: .5rem; }
+  .ex-chips { display: flex; flex-wrap: wrap; gap: .5rem; }
+  .ex-chip { font-size: .78rem; padding: .42rem .65rem; border-radius: 999px; }
 
   .result-hero {
     background: linear-gradient(180deg, var(--teal-tint), transparent);
@@ -699,7 +703,16 @@
         </div>
 
         <button type="button" class="btn" id="btnRecalc">Recalculer ✨</button>
-        <button type="button" class="btn ghost" id="btnExemple">Voir un exemple (50 000 €/an)</button>
+
+        <div class="ex-group">
+          <span class="ex-lbl">Ou testez un profil&nbsp;:</span>
+          <div class="ex-chips">
+            <button type="button" class="btn ghost ex-chip" data-ex="0">SMIC · ≈ 1 820 € brut/mois</button>
+            <button type="button" class="btn ghost ex-chip" data-ex="1">Médian · ≈ 2 700 € brut/mois</button>
+            <button type="button" class="btn ghost ex-chip" data-ex="2">50 000 € brut/an</button>
+            <button type="button" class="btn ghost ex-chip" data-ex="3">Cadre sup. · 90 000 € brut/an</button>
+          </div>
+        </div>
       </div>
 
       <div class="sim-panel" id="resultPanel" aria-live="polite">
@@ -1263,23 +1276,33 @@
     el("resultPanel").scrollIntoView({ behavior: "smooth", block: "nearest" });
   });
 
-  // Exemple : 50 000 € brut/an ≈ 39 000 € net/an, non-cadre, < 55 ans
-  el("btnExemple").addEventListener("click", function () {
-    el("stNonCadre").checked = true;
-    el("perAn").checked = true;
-    lastPeriode = "an";
-    el("salaire").value = 39000;
-    el("age").value = 42;
-    el("salaireRepris").value = 1600;
-    var fin = new Date(el("dateFin").value || new Date());
-    var entree = new Date(fin);
-    entree.setFullYear(entree.getFullYear() - 6);
-    el("dateEntree").value = entree.getFullYear() + "-" +
-      String(entree.getMonth() + 1).padStart(2, "0") + "-" +
-      String(entree.getDate()).padStart(2, "0");
-    clearFixed();
-    compute();
-    el("resultPanel").scrollIntoView({ behavior: "smooth", block: "nearest" });
+  // Profils d'exemple (salaires nets cohérents avec les bruts affichés sur les puces)
+  var EXAMPLES = [
+    { salaire: 1420,  periode: "mois", statut: "noncadre", age: 32, ans: 3 },               // ≈ SMIC (1 820 € brut/mois)
+    { salaire: 2100,  periode: "mois", statut: "noncadre", age: 40, ans: 8 },               // salaire médian (≈ 2 700 € brut/mois)
+    { salaire: 39000, periode: "an",   statut: "noncadre", age: 42, ans: 6, repris: 1600 }, // 50 000 € brut/an (exemple détaillé)
+    { salaire: 67500, periode: "an",   statut: "cadre",    age: 45, ans: 12 }               // 90 000 € brut/an (dégressivité)
+  ];
+  document.querySelectorAll(".ex-chip").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var ex = EXAMPLES[parseInt(btn.getAttribute("data-ex"), 10)];
+      if (!ex) return;
+      el(ex.statut === "cadre" ? "stCadre" : "stNonCadre").checked = true;
+      el(ex.periode === "an" ? "perAn" : "perMois").checked = true;
+      lastPeriode = ex.periode;
+      el("salaire").value = ex.salaire;
+      el("age").value = ex.age;
+      el("salaireRepris").value = ex.repris || "";
+      var fin = new Date(el("dateFin").value || new Date());
+      var entree = new Date(fin);
+      entree.setFullYear(entree.getFullYear() - ex.ans);
+      el("dateEntree").value = entree.getFullYear() + "-" +
+        String(entree.getMonth() + 1).padStart(2, "0") + "-" +
+        String(entree.getDate()).padStart(2, "0");
+      clearFixed();
+      compute();
+      el("resultPanel").scrollIntoView({ behavior: "smooth", block: "nearest" });
+    });
   });
 })();
 </script>
