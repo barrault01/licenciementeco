@@ -368,6 +368,31 @@
   .disclaimer-inline { font-size: .8rem; color: var(--muted); margin-top: 1.2rem; }
   .anchor-link { display:inline-block; margin-top: .6rem; font-weight: 600; }
 
+  /* ---------- DROITS CHART (CSP puis ARE) ---------- */
+  .droits-chart { margin: 1.4rem 0 .6rem; display: grid; gap: .9rem; }
+  .dc-row { display: grid; grid-template-columns: 8.5rem 1fr 5.2rem; gap: .8rem; align-items: center; }
+  .dc-age { font-size: .84rem; font-weight: 600; color: var(--ink); text-align: right; }
+  .dc-bar {
+    display: flex; height: 2.2rem; border-radius: 9px; overflow: hidden;
+    background: var(--band); border: 1px solid var(--line-soft);
+  }
+  .dc-seg {
+    display: flex; align-items: center; justify-content: center;
+    font-size: .72rem; font-weight: 600; color: #fff; white-space: nowrap; overflow: hidden;
+  }
+  .dc-seg.csp { background: var(--teal); }
+  .dc-seg.are { background: var(--violet); }
+  .dc-total { font-family: var(--serif); font-weight: 600; color: var(--ink); font-size: .95rem; white-space: nowrap; }
+  .dc-legend { display: flex; gap: 1.2rem; flex-wrap: wrap; margin-top: .3rem; font-size: .8rem; color: var(--muted); }
+  .dc-legend span { display: inline-flex; align-items: center; gap: .4rem; }
+  .dc-legend i { width: .8rem; height: .8rem; border-radius: 3px; display: inline-block; }
+  .dc-note { font-size: .8rem; color: var(--muted); margin-top: .6rem; }
+  @media (max-width: 720px) {
+    .dc-row { grid-template-columns: 1fr; gap: .3rem; }
+    .dc-age { text-align: left; }
+    .dc-seg { font-size: .62rem; }
+  }
+
   /* ---------- TOP BANNER ---------- */
   .sim-banner {
     display: flex; align-items: center; justify-content: center; gap: .7rem; flex-wrap: wrap;
@@ -545,6 +570,41 @@
       <li><strong>Moins d'1 an d'ancienneté&nbsp;:</strong> ASP = montant équivalent à l'ARE, et vous gardez votre indemnité compensatrice de préavis.</li>
       <li>L'allocation est <strong>suspendue</strong> pendant vos périodes de travail, puis reprend ensuite.</li>
     </ul>
+
+    <h3 style="margin-top:2rem">Vos droits au maximum&nbsp;: le CSP d'abord, le chômage ensuite</h3>
+    <p>Le temps passé en CSP est <strong>décompté de vos droits ARE</strong>. Avec des droits complets, voici la couverture maximale selon votre âge à la fin du contrat&nbsp;:</p>
+    <div class="droits-chart" role="img" aria-label="Durée maximale d'indemnisation. Moins de 55 ans : 12 mois de CSP puis 6 mois d'ARE, soit 18 mois au total. 55 et 56 ans : 12 mois de CSP puis 10,5 mois d'ARE, soit 22,5 mois au total. 57 ans et plus : 12 mois de CSP puis 15 mois d'ARE, soit 27 mois au total.">
+      <div class="dc-row">
+        <div class="dc-age">Moins de 55 ans</div>
+        <div class="dc-bar">
+          <span class="dc-seg csp" style="width:44.4%">CSP · 12 mois</span>
+          <span class="dc-seg are" style="width:22.2%">ARE · 6 mois</span>
+        </div>
+        <div class="dc-total">= 18 mois</div>
+      </div>
+      <div class="dc-row">
+        <div class="dc-age">55 – 56 ans</div>
+        <div class="dc-bar">
+          <span class="dc-seg csp" style="width:44.4%">CSP · 12 mois</span>
+          <span class="dc-seg are" style="width:38.9%">ARE · 10,5 mois</span>
+        </div>
+        <div class="dc-total">= 22,5 mois</div>
+      </div>
+      <div class="dc-row">
+        <div class="dc-age">57 ans et plus</div>
+        <div class="dc-bar">
+          <span class="dc-seg csp" style="width:44.4%">CSP · 12 mois</span>
+          <span class="dc-seg are" style="width:55.6%">ARE · 15 mois</span>
+        </div>
+        <div class="dc-total">= 27 mois</div>
+      </div>
+    </div>
+    <div class="dc-legend">
+      <span><i style="background:var(--teal)"></i>CSP — allocation ASP (75&nbsp;% du brut)</span>
+      <span><i style="background:var(--violet)"></i>ARE après le CSP</span>
+    </div>
+    <p class="dc-note">Hypothèse&nbsp;: droits complets (durée maximale d'indemnisation, soit 548, 685 ou 822 jours selon l'âge), sans reprise d'emploi ni prolongation. L'âge s'apprécie à la fin du contrat de travail.</p>
+
     <div class="callout">
       <span class="tag">Et le préavis&nbsp;?</span>
       <p>En acceptant le CSP, vous ne réalisez pas votre préavis. L'employeur verse à France&nbsp;Travail <strong>l'équivalent de votre indemnité de préavis, dans la limite de 3 mois</strong>, pour financer le dispositif. <strong>Si votre préavis dépasse 3 mois, le surplus vous est versé directement.</strong></p>
