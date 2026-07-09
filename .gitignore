@@ -1,0 +1,7 @@
+# Secrets et config locale — ne jamais committer
+.env
+.env.*
+.dev.vars
+.wrangler/
+node_modules/
+.DS_Store
