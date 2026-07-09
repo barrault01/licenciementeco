@@ -708,6 +708,14 @@
           <p style="color:var(--muted)">Complétez le formulaire à gauche pour afficher votre estimation.</p>
         </div>
 
+        <div id="resultIneligible" hidden>
+          <h3>Vos résultats</h3>
+          <div class="callout warn" style="margin:1rem 0 0">
+            <span class="tag">Attention</span>
+            <p id="inelMsg"></p>
+          </div>
+        </div>
+
         <div id="resultContent" hidden>
           <div class="result-hero">
             <div class="lbl">Pendant le CSP — allocation ASP (si vous acceptez)</div>
@@ -723,7 +731,7 @@
 
           <div class="rows">
             <div class="row">
-              <div class="k">Salaire journalier de référence (SJR)<small>estimé à partir du brut</small></div>
+              <div class="k">Salaire journalier de référence (SJR)<small id="rSjrNote">estimé à partir du brut</small></div>
               <div class="v"><span id="rSjr">—</span> €</div>
             </div>
             <div class="row">
@@ -960,6 +968,7 @@
   var DEG_PLANCHER = 92.57;  // plancher €/jour après dégressivité
   var DEG_COEF = 0.70;       // -30 %
   var DEG_APRES = 182;       // jours avant dégressivité (7e mois)
+  var SJR_MAX = 516.16;      // SJR plafonné : salaire de référence limité à 4 × plafond SS (2025)
 
   var el = function (id) { return document.getElementById(id); };
   var fmt = function (n) {
@@ -994,8 +1003,9 @@
     var dFin    = el("dateFin").value;
     var salaireRepris = parseFloat(el("salaireRepris").value);
 
-    if (!(salaire > 0) || !(age > 0) || !dEntree) {
+    if (!(salaire > 0) || !(age >= 16 && age <= 70) || !dEntree) {
       el("resultEmpty").hidden = false;
+      el("resultIneligible").hidden = true;
       el("resultContent").hidden = true;
       el("friseBlock").hidden = true;
       return;
@@ -1012,8 +1022,9 @@
     var brutMensuel = netMensuel / netToBrutFactor(statut);
     var brutAnnuel = brutMensuel * 12;
 
-    // SJR (hypothèse emploi continu)
-    var sjr = brutAnnuel / 365;
+    // SJR (hypothèse emploi continu), plafonné à 4 × le plafond de la Sécurité sociale
+    var sjrPlafonne = brutAnnuel / 365 > SJR_MAX;
+    var sjr = Math.min(brutAnnuel / 365, SJR_MAX);
 
     // ARE brute journalière
     var areJour = Math.max(T1 * sjr + PARTIE_FIXE, T2 * sjr);
@@ -1056,17 +1067,28 @@
     var arce = areJour * duree * 0.60 * 0.97;
     var arceReste = areJour * duree * 0.40;
 
-    // --- Affichage ---
-    el("resultEmpty").hidden = true;
-    el("resultContent").hidden = false;
-
-    if (!eligible) {
-      el("rAreMoisNet").textContent = "—";
-      el("rDureeNote").textContent = "affiliation insuffisante (< 6 mois)";
-    } else {
-      el("rDureeNote").textContent = duree >= maxDuree(age)
-        ? "plafonnée par votre âge" : "à raison d'un jour indemnisé par jour travaillé";
+    // --- Cas inéligibles : message explicite plutôt que des zéros ---
+    var inelMsg = null;
+    if (joursTravailles <= 0) {
+      inelMsg = "Vérifiez vos dates : la date de fin de contrat doit être postérieure à la date d'entrée.";
+    } else if (!eligible) {
+      inelMsg = "Avec " + fmt(joursTravailles) + " jours d'affiliation (moins de 6 mois), vous n'ouvrez en principe pas de droits à l'ARE — ni à l'ASP. Rapprochez-vous de France Travail pour étudier votre situation (d'autres périodes de travail peuvent compter).";
     }
+    el("resultEmpty").hidden = true;
+    el("resultIneligible").hidden = !inelMsg;
+    el("resultContent").hidden = !!inelMsg;
+    if (inelMsg) {
+      el("inelMsg").textContent = inelMsg;
+      el("friseBlock").hidden = true;
+      return;
+    }
+
+    // --- Affichage ---
+    el("rDureeNote").textContent = duree >= maxDuree(age)
+      ? "plafonnée par votre âge" : "à raison d'un jour indemnisé par jour travaillé";
+    el("rSjrNote").textContent = sjrPlafonne
+      ? "plafonné (salaire de référence limité à 4 × le plafond de la Sécurité sociale)"
+      : "estimé à partir du brut";
 
     el("rAspMoisNet").textContent = eligible ? fmt(aspMoisNet) : "0";
     el("rAspNote").textContent = anciennete1an
@@ -1106,7 +1128,11 @@
       el("frCspInfo").textContent = fmt(aspMoisNet) + " € net/mois · " + fmt1(dureeAsp / 30.4) + " mois";
       el("frSegAre").style.display = resteApresCsp > 0 ? "flex" : "none";
       el("frSegAre").style.width = (100 - cspPct) + "%";
-      el("frAreInfo").textContent = fmt(areMoisNet) + " € net/mois · " + fmt1(resteApresCsp / 30.4) + " mois";
+      // Après 12 mois de CSP, le seuil des 182 jours indemnisés est dépassé :
+      // si la dégressivité s'applique, l'ARE reprise est au taux réduit.
+      var areApresCsp = degressif ? areMoisNetApres : areMoisNet;
+      el("frAreInfo").textContent = fmt(areApresCsp) + " € net/mois"
+        + (degressif ? " (−30 %)" : "") + " · " + fmt1(resteApresCsp / 30.4) + " mois";
 
       el("frDate0").textContent = fmtDate(fin);
       // Masque la date intermédiaire si le segment ARE est trop court (risque de chevauchement)
@@ -1115,7 +1141,10 @@
       el("frDateMid").style.left = cspPct + "%";
       el("frDate1").textContent = fmtDate(dFinCsp);
       el("frDate2").textContent = fmtDate(dFinDroits);
-      el("frDate2Lbl").textContent = resteApresCsp > 0 ? "fin des droits ARE" : "fin du CSP et des droits";
+      el("frDate2Lbl").textContent = resteApresCsp > 0
+        ? "fin des droits ARE"
+        : (dureeAsp >= 365 ? "fin du CSP et des droits"
+                           : "fin des droits versés (l'accompagnement CSP dure 12 mois)");
     }
 
     // Reprise d'emploi (cumul ARE + salaire)
@@ -1136,7 +1165,8 @@
       el("rRepriseTotal").textContent = fmt(totalMois);
       if (joursInd > 0) {
         var moisCouverts = duree / joursInd; // chaque mois ne consomme que joursInd jours de droits
-        el("rRepriseDuree").textContent = "≈ " + fmt1(moisCouverts) + " mois";
+        el("rRepriseDuree").textContent = moisCouverts > 72
+          ? "plus de 6 ans" : "≈ " + fmt1(moisCouverts) + " mois";
       } else {
         el("rRepriseDuree").textContent = "droits préservés (aucun jour consommé)";
       }
@@ -1155,37 +1185,49 @@
     el("dateEntree").max = iso;
   })();
 
-  // Validation des champs requis
+  // Validation des champs requis : check() renvoie un message d'erreur, ou null si valide
   var FIELDS = [
-    { id: "dateEntree", ok: function () { return !!el("dateEntree").value; } },
-    { id: "dateFin", ok: function () {
-        var e = el("dateEntree").value, f = el("dateFin").value;
-        return !e || !f || new Date(f) > new Date(e);
+    { id: "dateEntree", check: function () {
+        var v = el("dateEntree").value;
+        if (!v) return "Indiquez votre date d'entrée dans l'entreprise.";
+        if (new Date(v) > new Date()) return "La date d'entrée ne peut pas être dans le futur.";
+        return null;
       } },
-    { id: "salaire", ok: function () { return parseFloat(el("salaire").value) > 0; } },
-    { id: "age", ok: function () {
+    { id: "dateFin", check: function () {
+        var e = el("dateEntree").value, f = el("dateFin").value;
+        if (e && f && new Date(f) <= new Date(e)) return "La date de fin doit être postérieure à la date d'entrée.";
+        return null;
+      } },
+    { id: "salaire", check: function () {
+        return parseFloat(el("salaire").value) > 0 ? null : "Indiquez votre salaire net (supérieur à 0).";
+      } },
+    { id: "age", check: function () {
         var a = parseInt(el("age").value, 10);
-        return a >= 16 && a <= 70;
+        return (a >= 16 && a <= 70) ? null : "Indiquez votre âge (entre 16 et 70 ans).";
       } }
   ];
-  function setInvalid(id, invalid) {
+  function setInvalid(id, msg) {
     var field = el(id).closest(".field");
-    if (field) field.classList.toggle("invalid", invalid);
-    el(id).setAttribute("aria-invalid", invalid ? "true" : "false");
+    if (field) {
+      field.classList.toggle("invalid", !!msg);
+      var err = field.querySelector(".ferr");
+      if (err && msg) err.textContent = msg;
+    }
+    el(id).setAttribute("aria-invalid", msg ? "true" : "false");
   }
   function validate() {
     var allOk = true;
     FIELDS.forEach(function (f) {
-      var ok = f.ok();
-      setInvalid(f.id, !ok);
-      if (!ok) allOk = false;
+      var msg = f.check();
+      setInvalid(f.id, msg);
+      if (msg) allOk = false;
     });
     return allOk;
   }
   // Efface les erreurs au fur et à mesure que les champs sont corrigés
   function clearFixed() {
     FIELDS.forEach(function (f) {
-      if (f.ok()) setInvalid(f.id, false);
+      if (!f.check()) setInvalid(f.id, null);
     });
   }
 
