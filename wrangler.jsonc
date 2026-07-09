@@ -1,0 +1,10 @@
+{
+  // Déploiement Cloudflare Workers (site statique servi depuis la racine)
+  "name": "moncsp",
+  "compatibility_date": "2026-07-09",
+  "assets": {
+    "directory": ".",
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "single-page-application"
+  }
+}
