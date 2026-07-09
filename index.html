@@ -1,3 +1,11 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Licenciement économique &amp; CSP — comprendre vos droits, avec simulateur</title>
+<meta name="description" content="Guide pratique du licenciement économique et du Contrat de sécurisation professionnelle (CSP) : allocation ASP, ARE, ARCE, mutuelle, aides au reclassement — avec un simulateur gratuit.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧭</text></svg>">
 <style>
   :root {
     color-scheme: light dark;
@@ -380,25 +388,23 @@
   }
   .frise-box h3 { margin-bottom: .3rem; }
   .frise-box .fr-sub { font-size: .9rem; color: var(--muted); margin-bottom: 1.5rem; }
-  .fr-track { display: flex; height: 3.4rem; border-radius: 10px; overflow: hidden; border: 1px solid var(--line-soft); }
-  .fr-seg {
-    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .05rem;
-    color: #fff; min-width: 0; overflow: hidden; padding-inline: .4rem;
+  .frise-v { display: grid; }
+  .fv-item { display: grid; grid-template-columns: 1.6rem 1fr; gap: .8rem; align-items: center; padding: .15rem 0; }
+  .fv-dot {
+    width: .85rem; height: .85rem; margin: 0 auto; border-radius: 50%;
+    background: var(--surface); border: 3px solid var(--teal); box-shadow: var(--shadow);
   }
-  .fr-seg b { font-size: .78rem; letter-spacing: .02em; white-space: nowrap; }
-  .fr-seg span { font-size: .72rem; opacity: .92; white-space: nowrap; }
-  .fr-seg.csp { background: var(--teal); }
-  .fr-seg.are { background: var(--violet); }
-  .fr-dates { position: relative; height: 2.7rem; margin-top: .55rem; font-size: .74rem; color: var(--muted); }
-  .fr-date { position: absolute; top: 0; transform: translateX(-50%); text-align: center; line-height: 1.35; white-space: nowrap; }
-  .fr-date b { display: block; color: var(--ink); font-variant-numeric: tabular-nums; }
-  .fr-date.start { left: 0; transform: none; text-align: left; }
-  .fr-date.end { left: 100%; transform: translateX(-100%); text-align: right; }
-  @media (max-width: 720px) {
-    .fr-seg b { font-size: .68rem; }
-    .fr-seg span { font-size: .6rem; }
-    .fr-dates { font-size: .66rem; }
-  }
+  .fv-item .fv-date b { color: var(--ink); font-variant-numeric: tabular-nums; }
+  .fv-item .fv-date .cap { display: block; font-size: .8rem; color: var(--muted); }
+  .fv-span { display: grid; grid-template-columns: 1.6rem 1fr; gap: .8rem; }
+  .fv-bar { width: 8px; margin: 0 auto; border-radius: 4px; min-height: 2.6rem; }
+  .fv-span.csp .fv-bar { background: var(--teal); }
+  .fv-span.are .fv-bar { background: var(--violet); }
+  .fv-card { align-self: center; padding: .6rem 0; }
+  .fv-card b { font-size: .95rem; }
+  .fv-card .fv-amt { display: block; font-size: .88rem; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+  .fv-span.csp .fv-card b { color: var(--teal); }
+  .fv-span.are .fv-card b { color: var(--violet); }
 
   /* ---------- DROITS CHART (CSP puis ARE) ---------- */
   .droits-chart { margin: 1.4rem 0 .6rem; display: grid; gap: .9rem; }
@@ -444,9 +450,25 @@
   @media (max-width: 720px) {
     .tiles { grid-template-columns: repeat(2, 1fr); }
     .compare, .grid2, .sources, .sim { grid-template-columns: 1fr; }
+    .wrap, .wrap-wide { padding-inline: 1.1rem; }
+    body { font-size: 16px; }
+    .sim-banner { font-size: .84rem; padding: .6rem 1rem; gap: .5rem; }
+    .sim-panel, .frise-box { padding: 1.2rem 1.1rem; }
+    .field-row { grid-template-columns: 1fr; }
+    .field-row .segset { justify-self: start; }
+    #btnRecalc { width: 100%; }
+    .example-box { padding: 1.1rem 1rem; }
+    .card, .bcard { padding: 1.2rem 1.1rem; }
+    .step { grid-template-columns: 2.2rem 1fr; gap: .8rem; }
+    .step .marker { width: 2.2rem; height: 2.2rem; font-size: .9rem; }
+    .step:not(:last-child)::before { left: 1.1rem; top: 2.2rem; }
+    .callout { padding: .9rem 1rem; }
+    .row .v { font-size: .95rem; }
   }
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>
+</head>
+<body>
 
 <a class="sim-banner" href="#simulateur">
   <span class="tag">🧮 Simulateur</span>
@@ -692,9 +714,15 @@
         </div>
 
         <div class="field">
-          <label for="age">Âge à la fin du contrat</label>
-          <input type="number" id="age" min="16" max="70" step="1" inputmode="numeric" placeholder="ex. 42" aria-describedby="errAge" />
-          <p class="ferr" id="errAge">Indiquez votre âge (entre 16 et 70 ans).</p>
+          <label>Âge à la fin du contrat <span class="hint">(vos droits changent à 55 et 57 ans)</span></label>
+          <div class="segset" role="group" aria-label="Âge à la fin du contrat">
+            <input type="radio" name="trancheAge" id="ageM55" value="50" checked />
+            <label for="ageM55">Moins de 55</label>
+            <input type="radio" name="trancheAge" id="age5556" value="55" />
+            <label for="age5556">55 – 56</label>
+            <input type="radio" name="trancheAge" id="age57" value="57" />
+            <label for="age57">57 et +</label>
+          </div>
         </div>
 
         <div class="field">
@@ -806,15 +834,28 @@
 
     <div class="frise-box" id="friseBlock" hidden>
       <h3>📅 De la fin du contrat à la fin de vos droits</h3>
-      <p class="fr-sub">Frise estimée à partir de vos informations&nbsp;: le CSP d'abord, puis le solde de vos droits ARE.</p>
-      <div class="fr-track">
-        <div class="fr-seg csp" id="frSegCsp"><b>CSP · ASP</b><span id="frCspInfo">—</span></div>
-        <div class="fr-seg are" id="frSegAre"><b>Chômage · ARE</b><span id="frAreInfo">—</span></div>
-      </div>
-      <div class="fr-dates">
-        <span class="fr-date start"><b id="frDate0">—</b>fin du contrat</span>
-        <span class="fr-date" id="frDateMid"><b id="frDate1">—</b>fin du CSP</span>
-        <span class="fr-date end"><b id="frDate2">—</b><span id="frDate2Lbl">fin des droits ARE</span></span>
+      <p class="fr-sub">Chronologie estimée à partir de vos informations&nbsp;: le CSP d'abord, puis le solde de vos droits ARE.</p>
+      <div class="frise-v">
+        <div class="fv-item">
+          <span class="fv-dot"></span>
+          <div class="fv-date"><b id="fvD0">—</b><span class="cap">fin du contrat de travail — le CSP démarre le lendemain</span></div>
+        </div>
+        <div class="fv-span csp">
+          <span class="fv-bar" id="fvBarCsp"></span>
+          <div class="fv-card"><b>CSP — allocation ASP</b><span class="fv-amt" id="fvCspInfo">—</span></div>
+        </div>
+        <div class="fv-item" id="fvMid">
+          <span class="fv-dot"></span>
+          <div class="fv-date"><b id="fvD1">—</b><span class="cap">fin du CSP — bascule vers l'ARE, sans démarche complexe</span></div>
+        </div>
+        <div class="fv-span are" id="fvSpanAre">
+          <span class="fv-bar" id="fvBarAre"></span>
+          <div class="fv-card"><b>Chômage — allocation ARE</b><span class="fv-amt" id="fvAreInfo">—</span></div>
+        </div>
+        <div class="fv-item">
+          <span class="fv-dot"></span>
+          <div class="fv-date"><b id="fvD2">—</b><span class="cap" id="fvD2Lbl">fin des droits ARE</span></div>
+        </div>
       </div>
     </div>
 
@@ -1007,16 +1048,52 @@
     return 548;
   }
 
+  // Persistance locale des saisies (rien ne quitte le navigateur)
+  var STORE_KEY = "csp-simulateur-v1";
+  function saveInputs() {
+    try {
+      localStorage.setItem(STORE_KEY, JSON.stringify({
+        dateEntree: el("dateEntree").value,
+        dateFin: el("dateFin").value,
+        salaire: el("salaire").value,
+        periode: document.querySelector('input[name="periode"]:checked').value,
+        statut: document.querySelector('input[name="statut"]:checked').value,
+        tranche: document.querySelector('input[name="trancheAge"]:checked').value,
+        salaireRepris: el("salaireRepris").value
+      }));
+    } catch (e) { /* stockage indisponible : tant pis */ }
+  }
+  function restoreInputs() {
+    try {
+      var raw = localStorage.getItem(STORE_KEY);
+      if (!raw) return false;
+      var v = JSON.parse(raw);
+      if (v.dateEntree) el("dateEntree").value = v.dateEntree;
+      if (v.dateFin) el("dateFin").value = v.dateFin;
+      if (v.salaire) el("salaire").value = v.salaire;
+      if (v.salaireRepris) el("salaireRepris").value = v.salaireRepris;
+      ["periode", "statut"].forEach(function (name) {
+        var r = document.querySelector('input[name="' + name + '"][value="' + v[name] + '"]');
+        if (r) r.checked = true;
+      });
+      var t = document.querySelector('input[name="trancheAge"][value="' + v.tranche + '"]');
+      if (t) t.checked = true;
+      if (v.periode) lastPeriode = v.periode;
+      return !!v.salaire;
+    } catch (e) { return false; }
+  }
+
   function compute() {
+    saveInputs();
     var salaire = parseFloat(el("salaire").value);
     var periode = document.querySelector('input[name="periode"]:checked').value;
     var statut  = document.querySelector('input[name="statut"]:checked').value;
-    var age     = parseInt(el("age").value, 10);
+    var age     = parseInt(document.querySelector('input[name="trancheAge"]:checked').value, 10);
     var dEntree = el("dateEntree").value;
     var dFin    = el("dateFin").value;
     var salaireRepris = parseFloat(el("salaireRepris").value);
 
-    if (!(salaire > 0) || !(age >= 16 && age <= 70) || !dEntree) {
+    if (!(salaire > 0) || !dEntree) {
       el("resultEmpty").hidden = false;
       el("resultIneligible").hidden = true;
       el("resultContent").hidden = true;
@@ -1126,33 +1203,36 @@
     el("rArce").textContent = eligible ? fmt(arce) : "0";
     el("rArceReste").textContent = eligible ? fmt(arceReste) : "0";
 
-    // Frise chronologique personnalisée
+    // Frise chronologique personnalisée (verticale)
     var friseBlock = el("friseBlock");
     friseBlock.hidden = !eligible;
     if (eligible) {
       var fmtDate = function (d) {
-        return d.toLocaleDateString("fr-FR", { day: "numeric", month: "short", year: "numeric" });
+        return d.toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
+      };
+      // Hauteur de barre proportionnelle à la durée (bornée pour rester lisible)
+      var barH = function (jours) {
+        return Math.max(2.6, (jours / 30.4) * 0.45) + "rem";
       };
       var dFinCsp = new Date(fin.getTime() + dureeAsp * 86400000);
       var dFinDroits = new Date(fin.getTime() + (dureeAsp + resteApresCsp) * 86400000);
-      var cspPct = resteApresCsp > 0 ? (dureeAsp / duree) * 100 : 100;
+      var hasAre = resteApresCsp > 0;
 
-      el("frSegCsp").style.width = cspPct + "%";
-      el("frCspInfo").textContent = fmt(aspMoisNet) + " € net/mois · " + fmt1(dureeAsp / 30.4) + " mois";
-      el("frSegAre").style.display = resteApresCsp > 0 ? "flex" : "none";
-      el("frSegAre").style.width = (100 - cspPct) + "%";
-      // La dégressivité ne s'applique pas pendant le CSP (fiche Unédic) et son décompte
-      // de 182 jours porte sur l'indemnisation ARE : l'ARE reprise est affichée à taux plein.
-      el("frAreInfo").textContent = fmt(areMoisNet) + " € net/mois · " + fmt1(resteApresCsp / 30.4) + " mois";
+      el("fvD0").textContent = fmtDate(fin);
+      el("fvCspInfo").textContent = fmt(aspMoisNet) + " € net/mois · " + fmt1(dureeAsp / 30.4) + " mois";
+      el("fvBarCsp").style.minHeight = barH(dureeAsp);
 
-      el("frDate0").textContent = fmtDate(fin);
-      // Masque la date intermédiaire si le segment ARE est trop court (risque de chevauchement)
-      var midVisible = resteApresCsp > 0 && cspPct <= 78;
-      el("frDateMid").style.display = midVisible ? "" : "none";
-      el("frDateMid").style.left = cspPct + "%";
-      el("frDate1").textContent = fmtDate(dFinCsp);
-      el("frDate2").textContent = fmtDate(dFinDroits);
-      el("frDate2Lbl").textContent = resteApresCsp > 0
+      el("fvMid").hidden = !hasAre;
+      el("fvSpanAre").hidden = !hasAre;
+      if (hasAre) {
+        el("fvD1").textContent = fmtDate(dFinCsp);
+        // La dégressivité ne s'applique pas pendant le CSP (fiche Unédic) et son décompte
+        // de 182 jours porte sur l'indemnisation ARE : l'ARE reprise est affichée à taux plein.
+        el("fvAreInfo").textContent = fmt(areMoisNet) + " € net/mois · " + fmt1(resteApresCsp / 30.4) + " mois";
+        el("fvBarAre").style.minHeight = barH(resteApresCsp);
+      }
+      el("fvD2").textContent = fmtDate(dFinDroits);
+      el("fvD2Lbl").textContent = hasAre
         ? "fin des droits ARE"
         : (dureeAsp >= 365 ? "fin du CSP et des droits"
                            : "fin des droits versés (l'accompagnement CSP dure 12 mois)");
@@ -1217,10 +1297,6 @@
       } },
     { id: "salaire", check: function () {
         return parseFloat(el("salaire").value) > 0 ? null : "Indiquez votre salaire net (supérieur à 0).";
-      } },
-    { id: "age", check: function () {
-        var a = parseInt(el("age").value, 10);
-        return (a >= 16 && a <= 70) ? null : "Indiquez votre âge (entre 16 et 70 ans).";
       } }
   ];
   function setInvalid(id, msg) {
@@ -1249,10 +1325,10 @@
   }
 
   // Écouteurs
-  ["salaire", "age", "dateEntree", "dateFin", "salaireRepris"].forEach(function (id) {
+  ["salaire", "dateEntree", "dateFin", "salaireRepris"].forEach(function (id) {
     el(id).addEventListener("input", function () { clearFixed(); compute(); });
   });
-  document.querySelectorAll('input[name="statut"]').forEach(function (r) {
+  document.querySelectorAll('input[name="statut"], input[name="trancheAge"]').forEach(function (r) {
     r.addEventListener("change", compute);
   });
 
@@ -1282,10 +1358,10 @@
 
   // Profils d'exemple (salaires nets cohérents avec les bruts affichés sur les puces)
   var EXAMPLES = [
-    { salaire: 1456,  periode: "mois", statut: "noncadre", age: 32, ans: 3 },               // ≈ SMIC (1 867 € brut/mois au 01/06/2026)
-    { salaire: 2100,  periode: "mois", statut: "noncadre", age: 40, ans: 8 },               // salaire médian (≈ 2 700 € brut/mois)
-    { salaire: 39000, periode: "an",   statut: "noncadre", age: 42, ans: 6, repris: 1600 }, // 50 000 € brut/an (exemple détaillé)
-    { salaire: 67500, periode: "an",   statut: "cadre",    age: 45, ans: 12 }               // 90 000 € brut/an (dégressivité)
+    { salaire: 1456,  periode: "mois", statut: "noncadre", tranche: "50", ans: 3 },               // ≈ SMIC (1 867 € brut/mois au 01/06/2026)
+    { salaire: 2100,  periode: "mois", statut: "noncadre", tranche: "50", ans: 8 },               // salaire médian (≈ 2 700 € brut/mois)
+    { salaire: 39000, periode: "an",   statut: "noncadre", tranche: "50", ans: 6, repris: 1600 }, // 50 000 € brut/an (exemple détaillé)
+    { salaire: 67500, periode: "an",   statut: "cadre",    tranche: "50", ans: 12 }               // 90 000 € brut/an (dégressivité)
   ];
   document.querySelectorAll(".ex-chip").forEach(function (btn) {
     btn.addEventListener("click", function () {
@@ -1295,7 +1371,7 @@
       el(ex.periode === "an" ? "perAn" : "perMois").checked = true;
       lastPeriode = ex.periode;
       el("salaire").value = ex.salaire;
-      el("age").value = ex.age;
+      document.querySelector('input[name="trancheAge"][value="' + ex.tranche + '"]').checked = true;
       el("salaireRepris").value = ex.repris || "";
       var fin = new Date(el("dateFin").value || new Date());
       var entree = new Date(fin);
@@ -1308,5 +1384,10 @@
       el("resultPanel").scrollIntoView({ behavior: "smooth", block: "nearest" });
     });
   });
+
+  // Restaure les saisies de la dernière visite et recalcule si un salaire était renseigné
+  if (restoreInputs()) compute();
 })();
 </script>
+</body>
+</html>
