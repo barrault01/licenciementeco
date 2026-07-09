@@ -707,7 +707,7 @@
         <div class="ex-group">
           <span class="ex-lbl">Ou testez un profil&nbsp;:</span>
           <div class="ex-chips">
-            <button type="button" class="btn ghost ex-chip" data-ex="0">SMIC · ≈ 1 820 € brut/mois</button>
+            <button type="button" class="btn ghost ex-chip" data-ex="0">SMIC · ≈ 1 870 € brut/mois</button>
             <button type="button" class="btn ghost ex-chip" data-ex="1">Médian · ≈ 2 700 € brut/mois</button>
             <button type="button" class="btn ghost ex-chip" data-ex="2">50 000 € brut/an</button>
             <button type="button" class="btn ghost ex-chip" data-ex="3">Cadre sup. · 90 000 € brut/an</button>
@@ -981,7 +981,7 @@
   var DEG_PLANCHER = 92.57;  // plancher €/jour après dégressivité
   var DEG_COEF = 0.70;       // -30 %
   var DEG_APRES = 182;       // jours avant dégressivité (7e mois)
-  var SJR_MAX = 516.16;      // SJR plafonné : salaire de référence limité à 4 × plafond SS (2025)
+  var SJR_MAX = 526.68;      // SJR plafonné : salaire de référence limité à 4 × plafond SS (4 005 €/mois en 2026)
 
   var el = function (id) { return document.getElementById(id); };
   var fmt = function (n) {
@@ -1141,11 +1141,9 @@
       el("frCspInfo").textContent = fmt(aspMoisNet) + " € net/mois · " + fmt1(dureeAsp / 30.4) + " mois";
       el("frSegAre").style.display = resteApresCsp > 0 ? "flex" : "none";
       el("frSegAre").style.width = (100 - cspPct) + "%";
-      // Après 12 mois de CSP, le seuil des 182 jours indemnisés est dépassé :
-      // si la dégressivité s'applique, l'ARE reprise est au taux réduit.
-      var areApresCsp = degressif ? areMoisNetApres : areMoisNet;
-      el("frAreInfo").textContent = fmt(areApresCsp) + " € net/mois"
-        + (degressif ? " (−30 %)" : "") + " · " + fmt1(resteApresCsp / 30.4) + " mois";
+      // La dégressivité ne s'applique pas pendant le CSP (fiche Unédic) et son décompte
+      // de 182 jours porte sur l'indemnisation ARE : l'ARE reprise est affichée à taux plein.
+      el("frAreInfo").textContent = fmt(areMoisNet) + " € net/mois · " + fmt1(resteApresCsp / 30.4) + " mois";
 
       el("frDate0").textContent = fmtDate(fin);
       // Masque la date intermédiaire si le segment ARE est trop court (risque de chevauchement)
@@ -1278,7 +1276,7 @@
 
   // Profils d'exemple (salaires nets cohérents avec les bruts affichés sur les puces)
   var EXAMPLES = [
-    { salaire: 1420,  periode: "mois", statut: "noncadre", age: 32, ans: 3 },               // ≈ SMIC (1 820 € brut/mois)
+    { salaire: 1456,  periode: "mois", statut: "noncadre", age: 32, ans: 3 },               // ≈ SMIC (1 867 € brut/mois au 01/06/2026)
     { salaire: 2100,  periode: "mois", statut: "noncadre", age: 40, ans: 8 },               // salaire médian (≈ 2 700 € brut/mois)
     { salaire: 39000, periode: "an",   statut: "noncadre", age: 42, ans: 6, repris: 1600 }, // 50 000 € brut/an (exemple détaillé)
     { salaire: 67500, periode: "an",   statut: "cadre",    age: 45, ans: 12 }               // 90 000 € brut/an (dégressivité)
