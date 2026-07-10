@@ -372,6 +372,8 @@
   .sources a:hover { border-color: var(--teal); }
 
   footer.disc { padding-block: 2.6rem; border-top: 1px solid var(--line); }
+  .foot-nav { display: flex; flex-wrap: wrap; gap: .4rem 1.2rem; margin: .4rem 0 1.1rem; }
+  .foot-nav a { font-size: .86rem; font-weight: 600; }
   footer.disc p { font-size: .84rem; color: var(--muted); margin-bottom: .6rem; }
   footer.disc .wordmark { font-family: var(--serif); font-weight: 600; color: var(--ink); font-size: 1rem; }
 
@@ -569,7 +571,7 @@
   </div>
 </header>
 
-<section class="band">
+<section class="band" id="essentiel">
   <div class="wrap">
     <p class="eyebrow">⏱️ L'essentiel en 30 secondes</p>
     <h2>Ce qu'il faut retenir</h2>
@@ -599,7 +601,7 @@
   </div>
 </section>
 
-<section>
+<section id="licenciement-economique">
   <div class="wrap">
     <p class="eyebrow">🧭 Le point de départ</p>
     <h2>Qu'est-ce qu'un licenciement économique&nbsp;?</h2>
@@ -618,7 +620,7 @@
   </div>
 </section>
 
-<section class="band">
+<section class="band" id="deroulement-csp">
   <div class="wrap">
     <p class="eyebrow">🗺️ Le dispositif</p>
     <h2>Le CSP, comment ça se passe&nbsp;?</h2>
@@ -664,7 +666,7 @@
   </div>
 </section>
 
-<section>
+<section id="accepter-ou-refuser">
   <div class="wrap">
     <p class="eyebrow">⚖️ La décision</p>
     <h2>Accepter ou refuser&nbsp;? Le comparatif</h2>
@@ -698,7 +700,7 @@
   </div>
 </section>
 
-<section class="band">
+<section class="band" id="allocation-asp">
   <div class="wrap">
     <p class="eyebrow">💶 Le revenu</p>
     <h2>Combien vais-je toucher&nbsp;?</h2>
@@ -972,7 +974,7 @@
   </div>
 </section>
 
-<section>
+<section id="primes-reclassement">
   <div class="wrap">
     <p class="eyebrow">🚀 Les coups de pouce</p>
     <h2>Ce qui aide au retour à l'emploi</h2>
@@ -1002,7 +1004,7 @@
   </div>
 </section>
 
-<section>
+<section id="mutuelle">
   <div class="wrap">
     <p class="eyebrow">🩺 La santé</p>
     <h2>Et ma mutuelle d'entreprise&nbsp;?</h2>
@@ -1038,7 +1040,7 @@
   </div>
 </section>
 
-<section class="band">
+<section class="band" id="faq">
   <div class="wrap">
     <p class="eyebrow">💬 Questions fréquentes</p>
     <h2>Idées reçues &amp; réponses</h2>
@@ -1071,7 +1073,7 @@
   </div>
 </section>
 
-<section>
+<section id="sources">
   <div class="wrap">
     <p class="eyebrow">📚 Aller plus loin</p>
     <h2>Sources officielles</h2>
@@ -1099,7 +1101,19 @@
 
 <footer class="disc">
   <div class="wrap">
-    <p class="wordmark">Licenciement économique &amp; CSP</p>
+    <p class="wordmark">moncsp.fr — Licenciement économique &amp; CSP</p>
+    <nav class="foot-nav" aria-label="Pied de page">
+      <a href="#licenciement-economique">Licenciement économique</a>
+      <a href="#deroulement-csp">Le CSP étape par étape</a>
+      <a href="#accepter-ou-refuser">Accepter ou refuser&nbsp;?</a>
+      <a href="#allocation-asp">L'allocation ASP</a>
+      <a href="#simulateur">Simulateur</a>
+      <a href="#primes-reclassement">Primes au reclassement</a>
+      <a href="#mutuelle">Mutuelle</a>
+      <a href="#faq">FAQ</a>
+      <a href="#sources">Sources officielles</a>
+    </nav>
+    <p>🔒 <strong>Confidentialité&nbsp;:</strong> aucun cookie, aucun traceur, aucune donnée transmise. Vos saisies du simulateur sont conservées uniquement dans votre navigateur, pour vous — supprimez les données du site pour les effacer.</p>
     <p>Guide informatif à destination des salariés. Informations à jour en <strong>juillet 2026</strong>, susceptibles d'évoluer&nbsp;; les montants et conditions dépendent de votre situation individuelle. Ce document ne constitue pas un conseil juridique et ne remplace pas les informations officielles ni l'avis d'un professionnel du droit.</p>
   </div>
 </footer>
