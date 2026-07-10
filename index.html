@@ -418,6 +418,8 @@
   .btn:active { transform: translateY(0) scale(.98); }
   .btn.ghost { background: transparent; color: var(--teal); }
   .btn:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
+  .res-actions { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 1.2rem; padding-top: 1rem; border-top: 2px solid var(--line); }
+  .res-actions .btn { font-size: .82rem; padding: .5rem .8rem; }
   .trust { display: flex; flex-wrap: wrap; gap: .5rem .6rem; margin: -0.6rem 0 1.2rem; }
   .trust span {
     background: var(--teal-tint); color: var(--teal); font-size: .78rem; font-weight: 600;
@@ -552,6 +554,39 @@
     .row .v { font-size: .95rem; }
   }
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+
+  /* ---------- IMPRESSION ---------- */
+  @media print {
+    :root {
+      color-scheme: light;
+      --paper:#fff; --band:#fff; --surface:#fff;
+      --ink:#1B2A4A; --ink-soft:#33405e; --muted:#5a627a;
+      --line:#c9c6bb; --line-soft:#dad7cc;
+      --teal:#0E7C6B; --teal-tint:#eef5f3;
+      --amber:#C77D28; --amber-tint:#f9f1e4;
+      --red:#B23B3B; --red-tint:#f7ecea;
+      --violet:#5646c9; --violet-tint:#efedfb;
+      --coral:#d05048; --coral-tint:#fbeeec;
+      --shadow: none;
+    }
+    * { box-shadow: none !important; transition: none !important; }
+    body { font-size: 11.5px; background: #fff; }
+    .sim-banner, .btn, .ex-group, .foot-nav, .anchor-link, .res-actions,
+    #resultEmpty { display: none !important; }
+    .segset { background: none; border: none; padding: 0; }
+    .segset label { display: none; }
+    .segset input:checked + label {
+      display: inline-block; background: none !important; padding: 0;
+      color: var(--ink); font-weight: 600;
+    }
+    section, header.hero { padding-block: 1.2rem; }
+    .band { border-block: none; }
+    .tile, .bcard, .card, .callout, .row, .step, .frise-box, .example-box,
+    details, .sim-panel, .fv-span, .dc-row { break-inside: avoid; }
+    .sim { grid-template-columns: 1fr; gap: 1rem; }
+    a { color: var(--ink); text-decoration: none; }
+    .sources a::after { content: " — " attr(href); font-size: .75em; color: var(--muted); }
+  }
 </style>
 </head>
 <body>
@@ -923,6 +958,11 @@
                 <div class="v"><span id="rRepriseDuree">—</span></div>
               </div>
             </div>
+          </div>
+
+          <div class="res-actions">
+            <button type="button" class="btn ghost" id="btnCopy">📋 Copier le résultat</button>
+            <button type="button" class="btn ghost" id="btnPrint">🖨️ Imprimer / PDF</button>
           </div>
         </div>
       </div>
@@ -1504,6 +1544,47 @@
       compute();
       el("resultPanel").scrollIntoView({ behavior: "smooth", block: "nearest" });
     });
+  });
+
+  // Copier le résultat (texte brut, lisible dans un mail ou un SMS)
+  function resumeTexte() {
+    if (el("resultContent").hidden) return null;
+    var l = [
+      "Mon estimation CSP — moncsp.fr",
+      "",
+      "ASP pendant le CSP : " + el("rAspMoisNet").textContent + " € net/mois pendant " + el("rAspDureeMois").textContent + " mois",
+      "ARE (si refus du CSP, ou après) : " + el("rAreMoisNet").textContent + " € net/mois",
+      "Indemnité légale de licenciement : " + el("rIndem").textContent + " € brut (minimum)",
+      "Salaire journalier de référence : " + el("rSjr").textContent + " €",
+      "Durée d'indemnisation ARE : " + el("rDureeMois").textContent + " mois",
+      "ARCE (création d'entreprise) : " + el("rArce").textContent + " €",
+      "",
+      "Estimation indicative — seuls les calculs de France Travail font foi."
+    ];
+    return l.join("\n");
+  }
+  el("btnCopy").addEventListener("click", function () {
+    var txt = resumeTexte();
+    if (!txt || !navigator.clipboard) return;
+    navigator.clipboard.writeText(txt).then(function () {
+      el("btnCopy").textContent = "✓ Copié !";
+      setTimeout(function () { el("btnCopy").textContent = "📋 Copier le résultat"; }, 2000);
+    });
+  });
+  el("btnPrint").addEventListener("click", function () { window.print(); });
+
+  // À l'impression : ouvre toutes les FAQ, puis restaure leur état
+  var detailsFermes = [];
+  window.addEventListener("beforeprint", function () {
+    detailsFermes = [];
+    document.querySelectorAll("details:not([open])").forEach(function (d) {
+      detailsFermes.push(d);
+      d.open = true;
+    });
+  });
+  window.addEventListener("afterprint", function () {
+    detailsFermes.forEach(function (d) { d.open = false; });
+    detailsFermes = [];
   });
 
   // Restaure les saisies de la dernière visite et recalcule si un salaire était renseigné
