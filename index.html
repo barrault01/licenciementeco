@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Licenciement économique &amp; CSP : vos droits + simulateur ASP / ARE 2026</title>
-<meta name="description" content="Licenciement économique : comprenez le Contrat de sécurisation professionnelle (CSP) et estimez vos allocations avec notre simulateur gratuit — ASP (75 % du brut), ARE, ARCE, mutuelle, primes au reclassement. À jour 2026.">
+<title>CSP &amp; licenciement économique : simulateur ASP / ARE 2026</title>
+<meta name="description" content="Licenciement économique : comprenez le CSP et estimez vos droits avec notre simulateur gratuit — ASP (75 % du brut), ARE, ARCE, indemnité légale. À jour 2026.">
 <link rel="canonical" href="https://moncsp.fr/">
 <meta name="theme-color" content="#0E7C6B">
 <meta property="og:type" content="website">
@@ -394,6 +394,11 @@
   footer.disc { padding-block: 2.6rem; border-top: 1px solid var(--line); }
   .foot-nav { display: flex; flex-wrap: wrap; gap: .4rem 1.2rem; margin: .4rem 0 1.1rem; }
   .foot-nav a { font-size: .86rem; font-weight: 600; }
+  .live-count { display: flex; align-items: center; gap: .5rem; }
+  .live-count strong { color: var(--ink); }
+  .live-dot { width: .55rem; height: .55rem; border-radius: 50%; background: #e0483e; flex: none; animation: livepulse 2s ease-in-out infinite; }
+  @keyframes livepulse { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
+  @media (prefers-reduced-motion: reduce) { .live-dot { animation: none; } }
   footer.disc p { font-size: .84rem; color: var(--muted); margin-bottom: .6rem; }
   footer.disc .wordmark { font-family: var(--serif); font-weight: 600; color: var(--ink); font-size: 1rem; }
 
@@ -592,7 +597,7 @@
     * { box-shadow: none !important; transition: none !important; }
     body { font-size: 11.5px; background: #fff; }
     .sim-banner, .btn, .ex-group, .foot-nav, .anchor-link, .res-actions,
-    #resultEmpty { display: none !important; }
+    #resultEmpty, .live-count { display: none !important; }
     .segset { background: none; border: none; padding: 0; }
     .segset label { display: none; }
     .segset input:checked + label {
@@ -1189,7 +1194,8 @@
       <a href="#faq">FAQ</a>
       <a href="#sources">Sources officielles</a>
     </nav>
-    <p>🔒 <strong>Confidentialité&nbsp;:</strong> aucun cookie, aucun traceur, aucune donnée transmise. Vos saisies du simulateur sont conservées uniquement dans votre navigateur, pour vous — supprimez les données du site pour les effacer.</p>
+    <p class="live-count" id="liveCount" hidden><span class="live-dot" aria-hidden="true"></span><strong><span id="liveNum">—</span></strong>&nbsp;personnes sur le site dans la dernière heure</p>
+    <p>🔒 <strong>Confidentialité&nbsp;:</strong> aucun cookie, aucun traceur, aucune donnée transmise. Vos saisies du simulateur sont conservées uniquement dans votre navigateur, pour vous — supprimez les données du site pour les effacer. Le compteur de visiteurs repose sur des statistiques agrégées et anonymes&nbsp;: aucune adresse IP n'est stockée.</p>
     <p>Guide informatif à destination des salariés. Informations à jour en <strong>juillet 2026</strong>, susceptibles d'évoluer&nbsp;; les montants et conditions dépendent de votre situation individuelle. Ce document ne constitue pas un conseil juridique et ne remplace pas les informations officielles ni l'avis d'un professionnel du droit.</p>
   </div>
 </footer>
@@ -1622,6 +1628,16 @@
     detailsFermes.forEach(function (d) { d.open = false; });
     detailsFermes = [];
   });
+
+  // Compteur de visiteurs (dernière heure), servi par /live.json — échec silencieux
+  if (location.protocol.indexOf("http") === 0) {
+    fetch("/live.json").then(function (r) { return r.json(); }).then(function (d) {
+      if (d && d.visitors) {
+        el("liveNum").textContent = d.capped ? "10 000 ou plus" : d.visitors.toLocaleString("fr-FR");
+        el("liveCount").hidden = false;
+      }
+    }).catch(function () {});
+  }
 
   // Restaure les saisies de la dernière visite et recalcule si un salaire était renseigné
   if (restoreInputs()) compute();
