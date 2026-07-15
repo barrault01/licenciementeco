@@ -1,6 +1,6 @@
 {
   // Déploiement Cloudflare Workers : site statique + endpoint /live.json (compteur)
-  "name": "moncsp",
+  "name": "licenciementeco",
   "main": "worker.js",
   "compatibility_date": "2026-07-09",
   "assets": {
