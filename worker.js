@@ -12,10 +12,14 @@ export default {
   async fetch(request, env, ctx) {
     var url = new URL(request.url);
 
-    // www -> apex
-    if (url.hostname === "www." + CANONICAL_HOST) {
-      url.hostname = CANONICAL_HOST;
-      return Response.redirect(url.toString(), 301);
+    // Une seule URL indexable : HTTPS, domaine apex, sans /index.html.
+    // Le test de domaine laisse fonctionner `wrangler dev` sur localhost.
+    var isPublicHost = url.hostname === CANONICAL_HOST || url.hostname === "www." + CANONICAL_HOST;
+    var hasIndexSuffix = url.pathname === "/index.html" || url.pathname.endsWith("/index.html");
+    if (isPublicHost && (url.protocol !== "https:" || url.hostname !== CANONICAL_HOST || hasIndexSuffix)) {
+      if (hasIndexSuffix) url.pathname = url.pathname.slice(0, -"index.html".length);
+      var canonicalUrl = "https://" + CANONICAL_HOST + url.pathname + url.search;
+      return new Response(null, { status: 301, headers: { location: canonicalUrl } });
     }
 
     if (url.pathname === "/live.json") {
@@ -29,6 +33,12 @@ export default {
       res = new Response(res.body, res);
       res.headers.set("X-Robots-Tag", "noindex");
     }
+
+    // En-têtes communs : sécurité, confidentialité et rendu cohérent.
+    res = new Response(res.body, res);
+    res.headers.set("X-Content-Type-Options", "nosniff");
+    res.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+    res.headers.set("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
     return res;
   }
 };
@@ -85,7 +95,8 @@ async function liveCount(env, ctx) {
     headers: {
       "content-type": "application/json",
       "cache-control": "public, max-age=60",
-      "access-control-allow-origin": "*"
+      "access-control-allow-origin": "*",
+      "x-robots-tag": "noindex"
     }
   });
   ctx.waitUntil(cache.put(cacheKey, res.clone()));

@@ -1,10 +1,12 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>CSP &amp; licenciement économique : simulateur ASP / ARE 2026</title>
 <meta name="description" content="Licenciement économique : comprenez le CSP et estimez vos droits avec notre simulateur gratuit — ASP (75 % du brut), ARE, ARCE, indemnité légale. À jour 2026.">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+<meta name="author" content="Rédaction MonCSP.fr">
 <link rel="canonical" href="https://moncsp.fr/">
 <meta name="theme-color" content="#0E7C6B">
 <meta property="og:type" content="website">
@@ -32,6 +34,32 @@
       "name": "MonCSP.fr",
       "description": "Guide du licenciement économique et du Contrat de sécurisation professionnelle (CSP), avec simulateur ASP / ARE / ARCE gratuit.",
       "inLanguage": "fr-FR"
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://moncsp.fr/#organization",
+      "name": "MonCSP.fr",
+      "url": "https://moncsp.fr/",
+      "description": "Guide indépendant consacré au licenciement économique et au Contrat de sécurisation professionnelle.",
+      "publishingPrinciples": "https://moncsp.fr/a-propos/"
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://moncsp.fr/#page",
+      "url": "https://moncsp.fr/",
+      "name": "CSP et licenciement économique : guide et simulateur 2026",
+      "isPartOf": { "@id": "https://moncsp.fr/#website" },
+      "datePublished": "2026-07-13",
+      "dateModified": "2026-08-04",
+      "inLanguage": "fr-FR",
+      "about": [
+        { "@type": "Thing", "name": "Contrat de sécurisation professionnelle" },
+        { "@type": "Thing", "name": "Licenciement économique" },
+        { "@type": "Thing", "name": "Allocation de sécurisation professionnelle" }
+      ],
+      "author": { "@id": "https://moncsp.fr/#organization" },
+      "publisher": { "@id": "https://moncsp.fr/#organization" },
+      "primaryImageOfPage": { "@type": "ImageObject", "url": "https://moncsp.fr/og-image.png", "width": 1200, "height": 630 }
     },
     {
       "@type": "WebApplication",
@@ -68,7 +96,7 @@
         {
           "@type": "Question",
           "name": "Que se passe-t-il au bout des 12 mois de CSP si je n'ai pas retrouvé d'emploi ?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Vous basculez vers l'ARE pour la durée de droits qu'il vous reste. Le temps passé en CSP est décompté de vos droits au chômage." }
+          "acceptedAnswer": { "@type": "Answer", "text": "Vous pouvez vous inscrire comme demandeur d'emploi et percevoir le reliquat de vos droits ARE, si vous remplissez toujours les conditions. Les jours indemnisés en ASP sont déduits de vos droits au chômage." }
         },
         {
           "@type": "Question",
@@ -117,12 +145,14 @@
     --line:       #DAD7CC;
     --line-soft:  #E5E2D8;
     --teal:       #0E7C6B;
+    --teal-solid: #0E7C6B;
     --teal-tint:  #E3F0EC;
     --amber:      #C77D28;
     --amber-tint: #F6EBD9;
     --red:        #B23B3B;
     --red-tint:   #F4E4E1;
     --violet:     #6C5CE7;
+    --violet-solid:#5848C8;
     --violet-tint:#ECE9FB;
     --coral:      #E8635A;
     --coral-tint: #FBE7E3;
@@ -147,12 +177,14 @@
       --line:       #29323F;
       --line-soft:  #222A36;
       --teal:       #45B8A2;
+      --teal-solid: #176A5D;
       --teal-tint:  #12241F;
       --amber:      #E0A24A;
       --amber-tint: #2A2114;
       --red:        #E07B72;
       --red-tint:   #2A1817;
       --violet:     #9D8FF2;
+      --violet-solid:#5745B8;
       --violet-tint:#221E33;
       --coral:      #F08A80;
       --coral-tint: #2E1A18;
@@ -165,9 +197,11 @@
     --ink:#1B2A4A; --ink-soft:#47506A; --muted:#6D7488;
     --line:#DAD7CC; --line-soft:#E5E2D8;
     --teal:#0E7C6B; --teal-tint:#E3F0EC;
+    --teal-solid:#0E7C6B;
     --amber:#C77D28; --amber-tint:#F6EBD9;
     --red:#B23B3B; --red-tint:#F4E4E1;
     --violet:#6C5CE7; --violet-tint:#ECE9FB;
+    --violet-solid:#5848C8;
     --coral:#E8635A; --coral-tint:#FBE7E3;
     --shadow:0 1px 2px rgba(27,42,74,.05), 0 8px 28px rgba(27,42,74,.07);
   }
@@ -177,9 +211,11 @@
     --ink:#ECEEF3; --ink-soft:#B9C0CE; --muted:#8A93A6;
     --line:#29323F; --line-soft:#222A36;
     --teal:#45B8A2; --teal-tint:#12241F;
+    --teal-solid:#176A5D;
     --amber:#E0A24A; --amber-tint:#2A2114;
     --red:#E07B72; --red-tint:#2A1817;
     --violet:#9D8FF2; --violet-tint:#221E33;
+    --violet-solid:#5745B8;
     --coral:#F08A80; --coral-tint:#2E1A18;
     --shadow:0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35);
   }
@@ -435,7 +471,7 @@
   .field-row { display: grid; grid-template-columns: 1fr auto; gap: .7rem; align-items: end; }
   .btn {
     font-family: var(--sans); font-weight: 600; font-size: .9rem; cursor: pointer;
-    border: 1px solid var(--teal); background: var(--teal); color: #fff;
+    border: 1px solid var(--teal-solid); background: var(--teal-solid); color: #fff;
     padding: .6rem 1rem; border-radius: 10px;
     transition: transform .15s ease, box-shadow .15s ease;
   }
@@ -531,8 +567,8 @@
     display: flex; align-items: center; justify-content: center;
     font-size: .72rem; font-weight: 600; color: #fff; white-space: nowrap; overflow: hidden;
   }
-  .dc-seg.csp { background: var(--teal); }
-  .dc-seg.are { background: var(--violet); }
+  .dc-seg.csp { background: var(--teal-solid); }
+  .dc-seg.are { background: var(--violet-solid); }
   .dc-total { font-family: var(--serif); font-weight: 600; color: var(--ink); font-size: .95rem; white-space: nowrap; }
   .dc-legend { display: flex; gap: 1.2rem; flex-wrap: wrap; margin-top: .3rem; font-size: .8rem; color: var(--muted); }
   .dc-legend span { display: inline-flex; align-items: center; gap: .4rem; }
@@ -547,17 +583,26 @@
   /* ---------- TOP BANNER ---------- */
   .sim-banner {
     display: flex; align-items: center; justify-content: center; gap: .7rem; flex-wrap: wrap;
-    background: var(--teal); color: #fff;
+    background: var(--teal-solid); color: #fff;
     padding: .7rem 1.4rem; text-align: center;
     font-weight: 600; font-size: .93rem; text-decoration: none;
   }
   .sim-banner .tag {
     font-family: var(--mono); font-size: .66rem; letter-spacing: .12em; text-transform: uppercase;
-    background: rgba(255,255,255,.18); padding: .2rem .55rem; border-radius: 6px;
+    background: rgba(0,0,0,.18); padding: .2rem .55rem; border-radius: 6px;
   }
   .sim-banner .arrow { transition: transform .15s ease; }
   .sim-banner:hover .arrow { transform: translateX(4px); }
   .sim-banner:focus-visible { outline: 2px solid #fff; outline-offset: -3px; }
+  .site-nav {
+    border-bottom: 1px solid var(--line-soft); background: var(--surface);
+  }
+  .site-nav .wrap-wide {
+    display: flex; gap: .45rem 1rem; align-items: center; flex-wrap: wrap;
+    padding-block: .7rem;
+  }
+  .site-nav strong { margin-right: auto; font-family: var(--serif); }
+  .site-nav a { font-size: .82rem; font-weight: 600; text-decoration: none; }
   @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
 
   @media (max-width: 720px) {
@@ -616,6 +661,16 @@
 </head>
 <body>
 
+<nav class="site-nav" aria-label="Guides principaux">
+  <div class="wrap-wide">
+    <strong>MonCSP.fr</strong>
+    <a href="/csp-accepter-ou-refuser/">Accepter ou refuser le CSP</a>
+    <a href="/calcul-allocation-csp/">Calcul de l'allocation CSP</a>
+    <a href="/indemnite-licenciement-economique/">Indemnité de licenciement</a>
+    <a href="/a-propos/">À propos</a>
+  </div>
+</nav>
+
 <a class="sim-banner" href="#simulateur">
   <span class="tag">🧮 Simulateur</span>
   <span>Estimez vos allocations ASP / ARE / ARCE — accéder directement au simulateur ✨</span>
@@ -627,7 +682,7 @@
     <p class="eyebrow lede-eyebrow">Guide pratique · Droit du travail français</p>
     <h1>Licenciement économique&nbsp;: <span class="kicker">comprendre le CSP</span> et vos droits</h1>
     <p class="intro">Vous êtes concerné par un licenciement pour motif économique&nbsp;? <strong>Pas de panique.</strong> Ce guide vous explique, simplement, ce qu'est le <strong>Contrat de sécurisation professionnelle (CSP)</strong>, ce qu'il change pour vous, et comment décider en connaissance de cause — souvent, c'est une vraie <strong>rampe de lancement</strong> vers la suite. 🚀</p>
-    <span class="stamp"><span class="dot"></span>À jour en juillet 2026 · Convention CSP prolongée jusqu'au 31 décembre 2026</span>
+    <span class="stamp"><span class="dot"></span>Publié par <a href="/a-propos/">la rédaction MonCSP.fr</a> · Vérifié le 4 août 2026</span>
   </div>
 </header>
 
@@ -957,7 +1012,7 @@
             <span class="cap">Option création d'entreprise — ARCE</span>
             <div class="rows">
               <div class="row">
-                <div class="k">Capital versé (60 % des droits)<small>en 2 fois, −3 % retraite compl.</small></div>
+                <div class="k">Capital maximal théorique (60 % des droits ARE)<small>en 2 fois, −3 % retraite compl. ; les jours d'ASP déjà versés réduisent le reliquat</small></div>
                 <div class="v"><span id="rArce">—</span> €</div>
               </div>
               <div class="row">
@@ -1007,7 +1062,7 @@
         </div>
         <div class="fv-item" id="fvMid">
           <span class="fv-dot"></span>
-          <div class="fv-date"><b id="fvD1">—</b><span class="cap">fin du CSP — bascule vers l'ARE, sans démarche complexe</span></div>
+          <div class="fv-date"><b id="fvD1">—</b><span class="cap">fin du CSP — inscription à France Travail pour demander le reliquat ARE</span></div>
         </div>
         <div class="fv-span are" id="fvSpanAre">
           <span class="fv-bar" id="fvBarAre"></span>
@@ -1030,7 +1085,7 @@
         <li>ARE/jour = le plus élevé entre&nbsp;: 40,4 %×137,0 + 13,18 = <b>68,5 €</b> et 57 %×137,0 = <b>78,1 €</b> → on retient <b>78,1 €</b> brut/jour.</li>
         <li>ARE mensuelle ≈ 78,1 × 30 ≈ <b>2 343 €</b> brut/mois (≈ <b>2 170 €</b> net après CSG/CRDS et retraite compl.).</li>
         <li>Durée&nbsp;: jusqu'à <b>548 jours</b> (18 mois) pour un moins de 55 ans ayant assez d'ancienneté.</li>
-        <li>ARCE (création d'entreprise)&nbsp;: 60 % du reliquat ≈ 78,1 × 548 × 0,60 − 3 % ≈ <b>24 900 €</b> de capital.</li>
+        <li>ARCE (création d'entreprise)&nbsp;: demandée dès l'ouverture des droits, son maximum théorique serait de 60 % du reliquat, soit ≈ 78,1 × 548 × 0,60 − 3 % ≈ <b>24 900 €</b>. Chaque jour d'ASP déjà perçu réduit ce reliquat.</li>
         <li>Reprise d'un emploi à 1 600 € brut/mois&nbsp;: ARE complémentaire ≈ (2 343 − 0,70×1 600) / 78,1 ≈ 15,7 jours → ≈ <b>1 223 €</b> d'ARE, soit ≈ <b>2 823 €</b> brut/mois cumulés, et vos droits <b>durent plus longtemps</b>.</li>
       </ol>
     </div>
@@ -1124,7 +1179,7 @@
       </details>
       <details>
         <summary>Que se passe-t-il au bout des 12 mois si je n'ai pas retrouvé d'emploi&nbsp;?</summary>
-        <div class="answer"><p>Vous basculez vers l'ARE pour la durée de droits qu'il vous reste. Le temps passé en CSP est décompté de vos droits au chômage.</p></div>
+        <div class="answer"><p>Vous pouvez vous <strong>inscrire comme demandeur d'emploi</strong> et percevoir le reliquat de vos droits ARE si vous remplissez toujours les conditions. Les jours indemnisés en ASP sont déduits de vos droits au chômage.</p></div>
       </details>
       <details>
         <summary>Le CSP existe-t-il toujours en 2026&nbsp;?</summary>
@@ -1151,6 +1206,16 @@
         <div class="answer"><p>Oui&nbsp;: des missions de <strong>3 jours à moins de 6 mois</strong>, avec l'accord de votre conseiller. L'ASP est suspendue pendant l'activité puis reprend. Les périodes travaillées à partir du 7ᵉ mois peuvent <strong>prolonger le CSP jusqu'à 3 mois</strong> (15 mois au total). Une embauche durable (≥&nbsp;6 mois) met fin au dispositif — pensez alors à la prime au reclassement.</p></div>
       </details>
     </div>
+  </div>
+</section>
+
+<section id="methode" class="band">
+  <div class="wrap">
+    <p class="eyebrow">🔎 Transparence éditoriale</p>
+    <h2>Comment ce guide est-il vérifié&nbsp;?</h2>
+    <p>MonCSP.fr est un guide indépendant, sans affiliation avec France&nbsp;Travail. Les règles et barèmes sont recoupés avec les publications de Service-Public.fr, du ministère du Travail, de France&nbsp;Travail et de l'Unédic. La date de dernière mise à jour est affichée en haut de page.</p>
+    <p>Le simulateur détaille ses hypothèses et reste indicatif&nbsp;: il ne dispose ni de votre historique de paie complet ni des données utilisées par France&nbsp;Travail. Pour une décision ou un litige, demandez un calcul officiel ou l'avis d'un professionnel du droit.</p>
+    <p><a href="/a-propos/">Consulter notre méthode éditoriale, nos principes d'indépendance et notre politique de correction</a>.</p>
   </div>
 </section>
 
@@ -1193,6 +1258,8 @@
       <a href="#mutuelle">Mutuelle</a>
       <a href="#faq">FAQ</a>
       <a href="#sources">Sources officielles</a>
+      <a href="#methode">Méthode éditoriale</a>
+      <a href="/a-propos/">À propos de MonCSP.fr</a>
     </nav>
     <p class="live-count" id="liveCount" hidden><span class="live-dot" aria-hidden="true"></span><strong><span id="liveNum">—</span></strong>&nbsp;personnes sur le site dans la dernière heure</p>
     <p>🔒 <strong>Confidentialité&nbsp;:</strong> aucun cookie, aucun traceur, aucune donnée transmise. Vos saisies du simulateur sont conservées uniquement dans votre navigateur, pour vous — supprimez les données du site pour les effacer. Le compteur de visiteurs repose sur des statistiques agrégées et anonymes&nbsp;: aucune adresse IP n'est stockée.</p>
@@ -1351,7 +1418,8 @@
       total = areJourNet * duree;
     }
 
-    // ARCE : 60 % du reliquat, -3 %
+    // ARCE maximale théorique si elle est demandée dès l'ouverture des droits :
+    // 60 % du reliquat, -3 %. Une période d'ASP déjà consommée réduit ce montant.
     var arce = areJour * duree * 0.60 * 0.97;
     var arceReste = areJour * duree * 0.40;
 

@@ -6,6 +6,9 @@
   "assets": {
     "binding": "ASSETS",
     "directory": ".",
+    // Le Worker doit voir toutes les requêtes afin d'appliquer les redirections
+    // HTTP/www avant que les fichiers statiques ne soient servis.
+    "run_worker_first": true,
     "html_handling": "auto-trailing-slash",
     // Un site une-page n'est pas une SPA : les URL inconnues doivent renvoyer
     // un vrai 404 (sinon soft-404 et contenu dupliqué pour les moteurs)

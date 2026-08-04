@@ -2,8 +2,22 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://moncsp.fr/</loc>
-    <lastmod>2026-07-13</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>1.0</priority>
+    <lastmod>2026-08-04</lastmod>
+  </url>
+  <url>
+    <loc>https://moncsp.fr/csp-accepter-ou-refuser/</loc>
+    <lastmod>2026-08-04</lastmod>
+  </url>
+  <url>
+    <loc>https://moncsp.fr/calcul-allocation-csp/</loc>
+    <lastmod>2026-08-04</lastmod>
+  </url>
+  <url>
+    <loc>https://moncsp.fr/indemnite-licenciement-economique/</loc>
+    <lastmod>2026-08-04</lastmod>
+  </url>
+  <url>
+    <loc>https://moncsp.fr/a-propos/</loc>
+    <lastmod>2026-08-04</lastmod>
   </url>
 </urlset>

@@ -7,6 +7,10 @@ et surtout le **Contrat de sécurisation professionnelle (CSP)** en droit du tra
 
 - [`index.html`](./index.html) — page web autonome (guide visuel destiné aux salariés)
   incluant un **simulateur ASP / ARE / ARCE**. Ouvrez-la dans un navigateur, ou publiez-la telle quelle.
+- [`csp-accepter-ou-refuser/`](./csp-accepter-ou-refuser/) — comparatif détaillé des deux choix.
+- [`calcul-allocation-csp/`](./calcul-allocation-csp/) — formule, exemples et accès au simulateur ASP.
+- [`indemnite-licenciement-economique/`](./indemnite-licenciement-economique/) — calcul de l'indemnité légale et effet du CSP.
+- [`a-propos/`](./a-propos/) — méthode éditoriale, indépendance, confidentialité et limites du simulateur.
 
 ## Simulateur
 
